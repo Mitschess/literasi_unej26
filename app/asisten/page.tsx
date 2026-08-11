@@ -20,13 +20,13 @@ export default function AIAssistantPage() {
   const [isThinking, setIsThinking] = useState(false);
 
   const presetQuestions = [
-    "Apa perbedaan program Ahmad Syaifudin dan Siti Nurhaliza Putri?",
+    "Apa program unggulan Anies Baswedan dan Prabowo Subianto?",
     "Siapa kandidat terbaik yang harus saya pilih di Pemilu ini?",
-    "Berapa tingkat kehadiran sidang Ahmad Syaifudin?",
-    "Bagaimana status janji smart farming Budi Santoso?",
+    "Bagaimana status program Makan Bergizi Gratis Prabowo Subianto?",
+    "Apa visi misi Ganjar Pranowo untuk pendidikan?",
   ];
 
-  const handleSendMessage = (textToSend?: string) => {
+  const handleSendMessage = async (textToSend?: string) => {
     const query = textToSend || inputQuery;
     if (!query.trim() || isThinking) return;
 
@@ -44,54 +44,27 @@ export default function AIAssistantPage() {
     if (!textToSend) setInputQuery("");
     setIsThinking(true);
 
-    // Simulate RAG pipeline response
-    setTimeout(() => {
-      let botAnswer = "";
-      let citedSources: Source[] = [];
-      const lowerQ = query.toLowerCase();
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: query,
+          history: messages.map((m) => ({ role: m.role, content: m.content })),
+        }),
+      });
 
-      // Guardrail Check per SRS §12.3 & AC-006:"Siapa terbaik / harus pilih siapa"
-      if (
-        lowerQ.includes("terbaik") ||
-        lowerQ.includes("pilih siapa") ||
-        lowerQ.includes("rekomendasi") ||
-        lowerQ.includes("siapa yang bagus")
-      ) {
-        botAnswer =
-          "Platform POLITRACK tidak memberikan rekomendasi atau menentukan kandidat terbaik untuk Anda.\n\nSesuai prinsip netralitas, tugas kami adalah menyediakan data rekam jejak, transparansi sumber, dan bukti realisasi janji yang terverifikasi agar Anda dapat mengambil keputusan politik secara mandiri.\n\nAnda dapat memanfaatkan fitur 'Bandingkan' untuk melihat perbandingan side-by-side antar kandidat.";
-      }
-      // Comparison Query
-      else if (
-        lowerQ.includes("perbedaan") ||
-        (lowerQ.includes("ahmad") && lowerQ.includes("siti"))
-      ) {
-        botAnswer =
-          "Berdasarkan data yang terdaftar pada platform POLITRACK:\n\n1. **Ahmad Syaifudin (PAN)**:\n- Berfokus pada bidang Pendidikan & UMKM Digital.\n- Program unggulan: Beasiswa Vokasi untuk 10.000 pemuda per tahun (Sedang berjalan).\n- Memiliki latar belakang 2 periode di DPRD Jawa Timur.\n\n2. **Siti Nurhaliza Putri (PKR)**:\n- Berfokus pada Kesehatan Masyarakat & Pemberdayaan Perempuan.\n- Program unggulan: Puskesmas Digital & Pelatihan Kewirausahaan Perempuan (Sebagian berjalan).\n- Pendiri Yayasan Sehat Nusantara.";
-        citedSources = [mockSources[0], mockSources[1], mockSources[4]];
-      }
-      // Specific performance metric query
-      else if (lowerQ.includes("kehadiran") || lowerQ.includes("sidang")) {
-        botAnswer =
-          "Berdasarkan data resmi Sekretariat DPRD Jawa Timur, **Ahmad Syaifudin** memiliki tingkat kehadiran sidang sebesar **87%** pada periode jabatan 2019–2024. Status data ini terverifikasi secara resmi.";
-        citedSources = [mockSources[1]];
-      }
-      // Promise status query
-      else if (lowerQ.includes("smart farming") || lowerQ.includes("budi")) {
-        botAnswer =
-          "Program **Smart Farming 20.000 Hektar** dari kandidat **Budi Santoso** saat ini berstatus **Belum Dimulai**.\n\nNamun, untuk program turunan 'Marketplace Digital Petani' (TaniKu), versi beta telah diluncurkan di 3 kecamatan sejak Februari 2026 dan berstatus terverifikasi.";
-        citedSources = [mockSources[3], mockSources[6]];
-      }
-      // Fallback
-      else {
-        botAnswer = `Berdasarkan pencarian data terverifikasi POLITRACK mengenai"${query}":\n\nData menunjukkan bahwa kandidat terdaftar memiliki catatan rekam jejak yang dapat ditelusuri melalui dokumen publik. Anda dapat memeriksa rincian lengkap pada halaman profil kandidat terkait.`;
-        citedSources = [mockSources[0]];
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Terjadi kesalahan pada server AI.");
       }
 
       const botMsg: ChatMessage = {
         id: `msg-${Date.now() + 1}`,
         role: "assistant",
-        content: botAnswer,
-        sources: citedSources.length > 0 ? citedSources : undefined,
+        content: data.content,
+        sources: data.sources && data.sources.length > 0 ? data.sources : undefined,
         timestamp: new Date().toLocaleTimeString([], {
           hour: "2-digit",
           minute: "2-digit",
@@ -99,8 +72,21 @@ export default function AIAssistantPage() {
       };
 
       setMessages((prev) => [...prev, botMsg]);
+    } catch (err: unknown) {
+      const errorText = err instanceof Error ? err.message : "Gagal terhubung ke AI Service.";
+      const errorMsg: ChatMessage = {
+        id: `msg-${Date.now() + 1}`,
+        role: "assistant",
+        content: `⚠️ ${errorText}`,
+        timestamp: new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      };
+      setMessages((prev) => [...prev, errorMsg]);
+    } finally {
       setIsThinking(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -120,13 +106,10 @@ export default function AIAssistantPage() {
               <span>Political Information Assistant</span>
             </h1>
             <p className="text-xs sm:text-sm text-ink-soft mt-0.5">
-              Asisten berbasis AI RAG yang menjawab pertanyaan berdasarkan data
+              Asisten berbasis AI yang menjawab pertanyaan berdasarkan data
               publik terverifikasi dan selalu mencantumkan sumber resminya.
             </p>
           </div>
-          <span className="px-3 py-1 rounded-full bg-brand-100 text-brand-800 text-xs font-bold border border-sage/40 shrink-0 hidden sm:inline-block">
-            ● Neutral AI System
-          </span>
         </div>
       </div>
 
@@ -142,8 +125,8 @@ export default function AIAssistantPage() {
             >
               <div
                 className={`max-w-2xl p-4 rounded-2xl text-xs sm:text-sm leading-relaxed space-y-3 ${msg.role === "user"
-                    ? "bg-brand-800 text-white rounded-br-none"
-                    : "bg-mist/50 text-ink border border-line/80 rounded-bl-none"
+                  ? "bg-brand-800 text-white rounded-br-none"
+                  : "bg-mist/50 text-ink border border-line/80 rounded-bl-none"
                   }`}
               >
                 <div className="whitespace-pre-line font-normal">
