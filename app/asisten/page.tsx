@@ -117,7 +117,7 @@ export default function AIAssistantPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-black text-ink flex items-center gap-2">
-              <span>🤖 Political Information Assistant</span>
+              <span>Political Information Assistant</span>
             </h1>
             <p className="text-xs sm:text-sm text-ink-soft mt-0.5">
               Asisten berbasis AI RAG yang menjawab pertanyaan berdasarkan data
@@ -137,16 +137,14 @@ export default function AIAssistantPage() {
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={`flex flex-col ${
-                msg.role === "user" ? "items-end" : "items-start"
-              }`}
+              className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"
+                }`}
             >
               <div
-                className={`max-w-2xl p-4 rounded-2xl text-xs sm:text-sm leading-relaxed space-y-3 ${
-                  msg.role === "user"
+                className={`max-w-2xl p-4 rounded-2xl text-xs sm:text-sm leading-relaxed space-y-3 ${msg.role === "user"
                     ? "bg-brand-800 text-white rounded-br-none"
                     : "bg-mist/50 text-ink border border-line/80 rounded-bl-none"
-                }`}
+                  }`}
               >
                 <div className="whitespace-pre-line font-normal">
                   {msg.content}

@@ -468,8 +468,8 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
         <section
           className="grid relative overflow-hidden"
           style={{
-            height: compact ? '400px' : '80svh',
-            maxHeight: compact ? '400px' : '540px',
+            height: compact ? '350px' : '80svh',
+            maxHeight: compact ? '350px' : '540px',
             width: compact ? '100%' : undefined,
             aspectRatio: compact ? undefined : '0.718',
             borderRadius: cardRadius,
@@ -564,15 +564,15 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
                 gridArea: '1 / -1',
                 borderRadius: cardRadius,
                 pointerEvents: 'none',
-                padding: compact ? '14px' : '18px',
+                padding: compact ? '12px' : '18px',
               }}
             >
-              <div className="flex flex-col gap-2.5 pointer-events-auto">
-                <div className="flex flex-col gap-1 text-left">
+              <div className="flex flex-col gap-2 pointer-events-auto">
+                <div className="flex flex-col gap-0.5 text-left">
                   <h3
                     className="m-0 font-semibold leading-tight"
                     style={{
-                      fontSize: compact ? '1.2rem' : 'min(4.2svh, 1.85rem)',
+                      fontSize: compact ? '1.05rem' : 'min(4.2svh, 1.85rem)',
                       color: '#F4F6F8',
                       letterSpacing: '-0.025em',
                       textShadow: '0 2px 18px rgba(0, 0, 0, 0.45)',
@@ -583,7 +583,7 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
                   <p
                     className="m-0 font-medium leading-snug"
                     style={{
-                      fontSize: compact ? '12px' : '13px',
+                      fontSize: compact ? '11px' : '13px',
                       color: '#C5D0DC',
                     }}
                   >
@@ -591,9 +591,11 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
                   </p>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-1.5">
                   <button
-                    className="flex-1 min-w-0 border border-white/15 rounded-lg px-3 py-2.5 text-[11px] font-bold text-white cursor-pointer transition-all duration-200 ease-out hover:border-[#2A9D8F]/60 hover:bg-[#2A9D8F]/20 hover:-translate-y-px backdrop-blur-[24px]"
+                    className={`flex-1 min-w-0 border border-white/15 rounded-lg text-white font-bold cursor-pointer transition-all duration-200 ease-out hover:border-[#2A9D8F]/60 hover:bg-[#2A9D8F]/20 hover:-translate-y-px backdrop-blur-[24px] ${
+                      compact ? 'px-2.5 py-2 text-[10.5px]' : 'px-3 py-2.5 text-[11px]'
+                    }`}
                     onClick={handleContactClick}
                     type="button"
                     aria-label={`${contactText} ${name || 'user'}`}
@@ -603,7 +605,9 @@ const ProfileCardComponent: React.FC<ProfileCardProps> = ({
                   </button>
                   {secondaryActionText && onSecondaryActionClick && (
                     <button
-                      className="flex-1 min-w-0 border border-white/15 rounded-lg px-3 py-2.5 text-[11px] font-bold text-white/95 cursor-pointer transition-all duration-200 ease-out hover:border-white/30 hover:bg-white/10 hover:-translate-y-px backdrop-blur-[24px]"
+                      className={`flex-1 min-w-0 border border-white/15 rounded-lg text-white/95 font-bold cursor-pointer transition-all duration-200 ease-out hover:border-white/30 hover:bg-white/10 hover:-translate-y-px backdrop-blur-[24px] ${
+                        compact ? 'px-2.5 py-2 text-[10.5px]' : 'px-3 py-2.5 text-[11px]'
+                      }`}
                       onClick={handleSecondaryActionClick}
                       type="button"
                       aria-label={`${secondaryActionText} ${name || 'user'}`}

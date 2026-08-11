@@ -7,6 +7,8 @@ import ShinyText from "@/components/ShinyText";
 import FadeContent from "@/components/FadeContent";
 import CountUp from "@/components/CountUp";
 
+import { TypewriterText } from "@/components/TypewriterText";
+
 function useSpotlight<T extends HTMLElement>() {
   const ref = useRef<T>(null);
 
@@ -55,14 +57,24 @@ export function HeroSection() {
             />
           </FadeContent>
 
-          <h1 className="font-display text-2xl sm:text-4xl lg:text-[2.75rem] text-ink-soft leading-snug max-w-2xl">
+          <h1 className="font-display text-2xl sm:text-4xl lg:text-[2.75rem] text-ink-soft leading-snug max-w-2xl min-h-[4.5rem]">
             Rekam jejak yang bisa ditelusuri —{" "}
             <GradientText
               colors={["#1B2A41", "#2A9D8F", "#3D516C", "#2A9D8F"]}
               animationSpeed={6}
               className="italic inline"
             >
-              bukan janji yang mengambang.
+              <TypewriterText
+                phrases={[
+                  "bukan janji yang mengambang.",
+                  "bukan klaim tanpa data.",
+                  "bukan narasi tanpa bukti.",
+                  "bukan sekadar retorika.",
+                ]}
+                typingSpeed={70}
+                deletingSpeed={35}
+                pauseDuration={2400}
+              />
             </GradientText>
           </h1>
 
@@ -112,7 +124,7 @@ export function HeroSection() {
 
         <div className="flex-1 w-full max-w-md lg:max-w-lg flex justify-center items-center relative z-20">
           <img
-            src="/images/cari_kandidat.png"
+            src="/images/assets/cari_kandidat.png"
             alt="Cari Kandidat Politrack"
             className="w-full h-auto object-contain drop-shadow-2xl animate-float"
           />

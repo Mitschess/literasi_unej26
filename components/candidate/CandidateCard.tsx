@@ -13,7 +13,7 @@ export const CandidateCard: React.FC<Props> = ({ candidate }) => {
   const router = useRouter();
 
   return (
-    <div className="w-full max-w-[280px] mx-auto">
+    <div className="w-full max-w-[240px] mx-auto">
       <ProfileCard
         compact
         className="w-full"

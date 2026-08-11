@@ -247,73 +247,108 @@ Anggaran Pendapatan dan Belanja Daerah (APBD) adalah rencana keuangan tahunan pe
 export const mockGlossary: GlossaryTerm[] = [
   {
     id: "gl-001",
-    term: "Dapil",
+    term: "APBD",
     definition:
-      "Daerah Pemilihan — wilayah yang menjadi dasar untuk menentukan calon anggota legislatif yang berhak dipilih oleh pemilih di wilayah tersebut.",
-    relatedTerms: ["Pemilu", "DPR", "DPRD"],
+      "Anggaran Pendapatan dan Belanja Daerah — Rencana keuangan tahunan pemerintah daerah yang dibahas dan disetujui bersama oleh DPRD dan Pemerintah Daerah.",
+    relatedTerms: ["DPRD", "Transparansi", "APBN"],
   },
   {
     id: "gl-002",
-    term: "DPRD",
+    term: "Bawaslu",
     definition:
-      "Dewan Perwakilan Rakyat Daerah — lembaga legislatif tingkat provinsi atau kabupaten/kota yang dipilih melalui pemilu.",
-    relatedTerms: ["Dapil", "Legislatif", "Perda"],
+      "Badan Pengawas Pemilihan Umum — Lembaga penyelenggara pemilu yang bertugas mengawasi seluruh tahapan penyelenggaraan pemilu di seluruh wilayah Indonesia.",
+    relatedTerms: ["KPU", "Pemilu", "Pelanggaran"],
   },
   {
     id: "gl-003",
-    term: "APBD",
+    term: "Dapil",
     definition:
-      "Anggaran Pendapatan dan Belanja Daerah — rencana keuangan tahunan pemerintah daerah yang dibahas dan disetujui bersama DPRD.",
-    relatedTerms: ["DPRD", "Transparansi"],
+      "Daerah Pemilihan — Wilayah administratif atau gabungan wilayah yang menjadi dasar batas penentuan alokasi kursi wakil rakyat di parlemen.",
+    relatedTerms: ["Pemilu", "DPR", "DPRD"],
   },
   {
     id: "gl-004",
-    term: "KPU",
+    term: "DPRD",
     definition:
-      "Komisi Pemilihan Umum — lembaga negara yang menyelenggarakan pemilihan umum di Indonesia.",
-    relatedTerms: ["Pemilu", "Dapil", "DPT"],
+      "Dewan Perwakilan Rakyat Daerah — Lembaga perwakilan rakyat daerah yang berkedudukan sebagai unsur penyelenggara pemerintahan daerah.",
+    relatedTerms: ["Dapil", "Legislatif", "Perda"],
   },
   {
     id: "gl-005",
     term: "DPT",
     definition:
-      "Daftar Pemilih Tetap — daftar warga negara yang berhak memberikan suaranya dalam pemilihan umum.",
-    relatedTerms: ["KPU", "Pemilu"],
+      "Daftar Pemilih Tetap — Hasil pemutakhiran data pemilih yang telah diverifikasi dan disahkan oleh KPU untuk digunakan pada pemungutan suara.",
+    relatedTerms: ["KPU", "Pemilu", "Hak Pilih"],
   },
   {
     id: "gl-006",
-    term: "Perda",
-    definition:
-      "Peraturan Daerah — produk hukum yang ditetapkan oleh kepala daerah bersama DPRD untuk mengatur daerahnya.",
-    relatedTerms: ["DPRD", "Legislasi"],
-  },
-  {
-    id: "gl-007",
     term: "Fraksi",
     definition:
-      "Pengelompokan anggota DPR/DPRD berdasarkan partai politik. Fraksi berperan dalam menyalurkan aspirasi partai dalam lembaga legislatif.",
+      "Wadah berhimpun anggota DPR/DPRD dari partai politik yang sama atau gabungan partai untuk mengoptimalkan pelaksanaan tugas legislatif.",
     relatedTerms: ["DPR", "DPRD", "Partai Politik"],
   },
   {
-    id: "gl-008",
-    term: "Legislasi",
+    id: "gl-007",
+    term: "Hak Interpelasi",
     definition:
-      "Proses pembentukan peraturan perundang-undangan. Merupakan salah satu fungsi utama DPR/DPRD.",
-    relatedTerms: ["Perda", "DPR", "DPRD"],
+      "Hak DPR/DPRD untuk meminta keterangan kepada Pemerintah mengenai kebijakan penting dan strategis yang berdampak luas bagi masyarakat.",
+    relatedTerms: ["DPR", "Hak Angket", "Pengawasan"],
+  },
+  {
+    id: "gl-008",
+    term: "Koalisi",
+    definition:
+      "Aliansi atau kerja sama antar beberapa partai politik untuk membentuk mayoritas dalam pemerintahan atau mendukung pasangan calon dalam pemilu.",
+    relatedTerms: ["Partai Politik", "Pilpres"],
   },
   {
     id: "gl-009",
-    term: "Hak Interpelasi",
+    term: "KPU",
     definition:
-      "Hak DPR/DPRD untuk meminta keterangan kepada pemerintah/pemerintah daerah mengenai kebijakan yang penting dan strategis.",
-    relatedTerms: ["DPR", "DPRD", "Pengawasan"],
+      "Komisi Pemilihan Umum — Lembaga negara yang bersifat nasional, tetap, dan mandiri yang bertugas menyelenggarakan pemilu.",
+    relatedTerms: ["Pemilu", "Bawaslu", "DPT"],
   },
   {
     id: "gl-010",
-    term: "RAG",
+    term: "Legislasi",
     definition:
-      "Retrieval-Augmented Generation — teknik AI yang mengambil informasi dari database/sumber terverifikasi untuk menyusun jawaban, sehingga mengurangi risiko halusinasi.",
-    relatedTerms: ["AI", "Verifikasi"],
+      "Proses pembuatan atau pembentukan undang-undang dan peraturan daerah yang menjadi wewenang utama badan legislatif.",
+    relatedTerms: ["Perda", "DPR", "DPRD"],
+  },
+  {
+    id: "gl-011",
+    term: "Mahkamah Konstitusi (MK)",
+    definition:
+      "Lembaga peradilan tinggi negara yang berwenang menguji undang-undang terhadap UUD 1945 serta memutus perselisihan hasil pemilu.",
+    relatedTerms: ["Sengketa Pemilu", "UUD 1945"],
+  },
+  {
+    id: "gl-012",
+    term: "Perda",
+    definition:
+      "Peraturan Daerah — Peraturan perundang-undangan yang dibentuk oleh DPRD dengan persetujuan bersama Kepala Daerah (Gubernur/Bupati/Wali Kota).",
+    relatedTerms: ["DPRD", "Legislasi"],
+  },
+  {
+    id: "gl-013",
+    term: "RAG (Retrieval-Augmented Generation)",
+    definition:
+      "Teknologi AI yang memadukan pencarian data kontekstual dari basis pengetahuan terverifikasi sebelum menyusun jawaban guna mencegah halusinasi fakta.",
+    relatedTerms: ["AI Neutrality", "Verifikasi"],
+  },
+  {
+    id: "gl-014",
+    term: "Threshold (Ambang Batas)",
+    definition:
+      "Batas minimum persentase perolehan suara atau kursi partai politik untuk dapat menempatkan wakilnya di parlemen atau mengusung calon presiden.",
+    relatedTerms: ["Parliamentary Threshold", "Pilpres"],
+  },
+  {
+    id: "gl-015",
+    term: "Opini WTP (Wajar Tanpa Pengecualian)",
+    definition:
+      "Predikat tertinggi dari Badan Pemeriksa Keuangan (BPK) atas audit laporan keuangan pemerintah yang disajikan secara wajar dan akuntabel.",
+    relatedTerms: ["BPK", "Transparansi APBD"],
   },
 ];
 
