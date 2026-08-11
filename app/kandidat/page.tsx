@@ -11,7 +11,7 @@ import { getCandidateCountsByProvince } from "@/lib/map/province-stats";
 const IndonesiaMap = dynamic(() => import("@/components/map/IndonesiaMap"), {
   ssr: false,
   loading: () => (
-    <div className="h-[280px] sm:h-[360px] animate-pulse rounded-2xl bg-mist/30" />
+    <div className="h-[220px] sm:h-[320px] animate-pulse rounded-2xl bg-mist/30" />
   ),
 });
 
@@ -28,9 +28,6 @@ function CandidateListContent() {
   const [selectedElectionType, setSelectedElectionType] = useState(
     initialType || "all",
   );
-  const [selectedCandidatesForCompare, setSelectedCandidatesForCompare] =
-    useState<string[]>([]);
-
   const provinceCounts = useMemo(
     () => getCandidateCountsByProvince(mockCandidates),
     [],
@@ -86,27 +83,6 @@ function CandidateListContent() {
       return true;
     });
   }, [searchQuery, selectedParty, selectedProvince, selectedElectionType]);
-
-  const toggleCompare = (candidateId: string) => {
-    if (selectedCandidatesForCompare.includes(candidateId)) {
-      setSelectedCandidatesForCompare((prev) =>
-        prev.filter((id) => id !== candidateId),
-      );
-    } else {
-      if (selectedCandidatesForCompare.length >= 4) {
-        alert("Maksimal 4 kandidat untuk dibandingkan secara bersamaan.");
-        return;
-      }
-      setSelectedCandidatesForCompare((prev) => [...prev, candidateId]);
-    }
-  };
-
-  const getCompareUrl = () => {
-    const params = selectedCandidatesForCompare
-      .map((id, index) => `c${index + 1}=${id}`)
-      .join("&");
-    return `/bandingkan?${params}`;
-  };
 
   const updateProvinceInUrl = useCallback(
     (province: string) => {
@@ -312,65 +288,12 @@ function CandidateListContent() {
         </div>
       </div>
 
-      {/* MULTI-CANDIDATE COMPARISON BAR */}
-      {selectedCandidatesForCompare.length > 0 && (
-        <div className="sticky top-20 z-40 p-4 rounded-2xl bg-brand-900 text-white shadow-2xl flex items-center justify-between gap-4 border border-brand-700 animate-slide-in-right">
-          <div className="flex items-center gap-3">
-            <span className="w-8 h-8 rounded-full bg-brand-800 flex items-center justify-center font-bold text-xs">
-              {selectedCandidatesForCompare.length}
-            </span>
-            <div className="text-xs">
-              <span className="font-bold block">
-                {selectedCandidatesForCompare.length} Kandidat Dipilih
-              </span>
-              <span className="text-mist hidden sm:inline">
-                Siap untuk dibandingkan kinerjanya side-by-side
-              </span>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setSelectedCandidatesForCompare([])}
-              className="px-3 py-1.5 rounded-xl text-xs font-medium text-mist hover:text-white"
-            >
-              Batal
-            </button>
-            <Link
-              href={getCompareUrl()}
-              className="px-4 py-2 rounded-xl text-xs font-bold bg-verified hover:bg-sage text-brand-900 transition-colors shadow-sm"
-            >
-              Bandingkan Sekarang →
-            </Link>
-          </div>
-        </div>
-      )}
-
       {/* CANDIDATE CARDS GRID */}
       {filteredCandidates.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
-          {filteredCandidates.map((candidate) => {
-            const isSelected = selectedCandidatesForCompare.includes(
-              candidate.id,
-            );
-            return (
-              <div key={candidate.id} className="relative">
-                <div className="absolute top-4 right-4 z-10">
-                  <button
-                    onClick={() => toggleCompare(candidate.id)}
-                    className={`p-1.5 rounded-lg text-xs font-bold transition-all ${
-                      isSelected
-                        ? "bg-brand-800 text-white shadow-md ring-2 ring-sage"
-                        : "bg-mist/50 text-ink-soft hover:bg-mist"
-                    }`}
-                    title="Pilih untuk perbandingan"
-                  >
-                    {isSelected ? "✓ Dibandingkan" : "+ Bandingkan"}
-                  </button>
-                </div>
-                <CandidateCard candidate={candidate} />
-              </div>
-            );
-          })}
+          {filteredCandidates.map((candidate) => (
+            <CandidateCard key={candidate.id} candidate={candidate} />
+          ))}
         </div>
       ) : (
         <div className="p-12 text-center bg-white rounded-3xl border border-line space-y-3">

@@ -9,8 +9,6 @@ interface Props {
   candidate: Candidate;
 }
 
-const PROFILE_PHOTO = "/images/test1.png";
-
 export const CandidateCard: React.FC<Props> = ({ candidate }) => {
   const router = useRouter();
 
@@ -23,7 +21,7 @@ export const CandidateCard: React.FC<Props> = ({ candidate }) => {
         title={`${candidate.party.shortName} · ${candidate.constituency.name}`}
         contactText="Rekam Jejak"
         secondaryActionText="Bandingkan"
-        avatarUrl={PROFILE_PHOTO}
+        avatarUrl={candidate.photoUrl}
         iconUrl=""
         grainUrl=""
         enableTilt

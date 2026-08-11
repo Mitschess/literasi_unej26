@@ -64,11 +64,12 @@ export const IndonesiaMap: React.FC<IndonesiaMapProps> = ({
       <ComposableMap
         projection="geoMercator"
         projectionConfig={{
-          center: [118, -1.5],
-          scale: 850,
+          // Tuned so Aceh → Papua fits in-frame after GeoJSON winding fix
+          center: [118, -2.2],
+          scale: 1100,
         }}
-        width={800}
-        height={520}
+        width={960}
+        height={420}
         style={{ width: "100%", height: "auto" }}
       >
         <Geographies geography={GEO_URL}>

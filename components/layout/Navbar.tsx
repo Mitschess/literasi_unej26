@@ -14,8 +14,9 @@ export const Navbar: React.FC = () => {
     { label: "Cari Kandidat", href: "/kandidat" },
     { label: "Bandingkan", href: "/bandingkan" },
     { label: "Literasi", href: "/literasi" },
-    { label: "Asisten AI", href: "/asisten", highlight: true },
   ];
+
+  const asistenHref = "/asisten";
 
   const isActive = (path: string) => {
     if (path === "/") return pathname === "/";
@@ -37,52 +38,56 @@ export const Navbar: React.FC = () => {
           : "border-b border-transparent bg-cream/50 backdrop-blur-md"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="relative w-10 h-10 rounded-lg bg-brand-700 text-cream flex items-center justify-center font-display font-semibold text-xl overflow-hidden transition-transform duration-300 group-hover:scale-105">
-            <span className="relative z-10">P</span>
-            <span className="absolute inset-0 bg-gradient-to-tr from-sage/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          </div>
-          <div className="flex flex-col leading-none">
-            <span className="font-display text-xl tracking-tight text-ink">
-              POLITRACK
-            </span>
-            <span className="text-[10px] uppercase tracking-[0.18em] text-ink-muted mt-1">
-              Literasi · Rekam Jejak
-            </span>
-          </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-6">
+        <Link href="/" className="flex flex-col leading-none shrink-0">
+          <span className="font-display text-xl tracking-tight text-ink">
+            POLITRACK
+          </span>
+          <span className="text-[10px] uppercase tracking-[0.18em] text-ink-muted mt-1">
+            Literasi · Rekam Jejak
+          </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1 p-1 rounded-lg bg-white/70 border border-line">
-          {navItems.map((item) => {
-            const active = isActive(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`relative px-3.5 py-2 rounded-md text-sm font-medium transition-all duration-250 ${
-                  item.highlight
-                    ? "bg-sage text-white font-semibold shadow-[0_4px_14px_rgba(42,157,143,0.35)] hover:brightness-105"
-                    : active
-                      ? "bg-brand-700 text-cream"
-                      : "text-ink-soft hover:text-ink hover:bg-mist/50"
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+        <div className="hidden md:flex items-center gap-5 ml-auto">
+          <nav className="flex items-center gap-0.5">
+            {navItems.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`relative px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                    active
+                      ? "bg-sage/10 text-sage"
+                      : "text-ink-soft hover:bg-mist/60 hover:text-ink"
+                  }`}
+                >
+                  {item.label}
+                  <span
+                    className={`pointer-events-none absolute left-3 right-3 bottom-1 h-px rounded-full bg-sage transition-opacity duration-200 ${
+                      active ? "opacity-100" : "opacity-0"
+                    }`}
+                  />
+                </Link>
+              );
+            })}
+          </nav>
 
-        <div className="hidden md:block">
-          <Link href="/kandidat" className="btn-ghost !py-2 !px-4 !text-xs">
-            Eksplorasi Data
+          <Link
+            href={asistenHref}
+            className={`inline-flex items-center px-4 py-2 rounded-md text-sm font-semibold border transition-colors duration-200 ${
+              isActive(asistenHref)
+                ? "border-sage bg-sage text-white"
+                : "border-sage/40 bg-sage/10 text-sage hover:border-sage hover:bg-sage/15"
+            }`}
+          >
+            Asisten AI
           </Link>
         </div>
 
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2.5 rounded-xl text-ink-soft hover:bg-mist/60 transition-colors"
+          className="md:hidden p-2.5 rounded-xl text-ink-soft hover:bg-mist/60 transition-colors ml-auto"
           aria-label="Toggle Navigation"
         >
           <svg
@@ -119,15 +124,24 @@ export const Navbar: React.FC = () => {
               onClick={() => setMobileMenuOpen(false)}
               className={`block px-3 py-2.5 rounded-xl text-base font-medium transition-colors ${
                 isActive(item.href)
-                  ? "bg-brand-800 text-cream"
-                  : item.highlight
-                    ? "bg-gold/20 text-brand-800"
-                    : "text-ink-soft hover:bg-mist/50"
+                  ? "bg-sage/10 text-sage"
+                  : "text-ink-soft hover:bg-mist/50"
               }`}
             >
               {item.label}
             </Link>
           ))}
+          <Link
+            href={asistenHref}
+            onClick={() => setMobileMenuOpen(false)}
+            className={`block mt-2 px-3 py-2.5 rounded-xl text-base font-semibold text-center border transition-colors ${
+              isActive(asistenHref)
+                ? "border-sage bg-sage text-white"
+                : "border-sage/40 bg-sage/10 text-sage"
+            }`}
+          >
+            Asisten AI
+          </Link>
         </div>
       )}
     </header>

@@ -93,13 +93,11 @@ export default function CandidateDetailPage() {
           <div className="flex items-center gap-6">
             {/* Avatar */}
             <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-tr from-sage to-gold p-1 shadow-lg shrink-0">
-              <div className="w-full h-full rounded-[22px] bg-mist/50 flex items-center justify-center font-black text-3xl text-brand-700 ">
-                {candidate.name
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")
-                  .slice(0, 2)}
-              </div>
+              <img
+                src={candidate.photoUrl}
+                alt={candidate.name}
+                className="w-full h-full rounded-[22px] object-cover bg-mist/50"
+              />
             </div>
 
             {/* Main Info */}

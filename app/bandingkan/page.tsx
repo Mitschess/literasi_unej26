@@ -153,13 +153,11 @@ function CandidateComparisonContent() {
 
                     {/* Candidate Identity Brief */}
                     <div className="flex items-center gap-3 pt-2">
-                      <div className="w-12 h-12 rounded-xl bg-mist/50 border border-line flex items-center justify-center font-bold text-sm text-brand-700 shrink-0">
-                        {candidate.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")
-                          .slice(0, 2)}
-                      </div>
+                      <img
+                        src={candidate.photoUrl}
+                        alt={candidate.name}
+                        className="w-12 h-12 rounded-xl object-cover border border-line shrink-0 bg-mist/50"
+                      />
                       <div>
                         <div className="font-extrabold text-sm text-ink line-clamp-1">
                           {candidate.name}

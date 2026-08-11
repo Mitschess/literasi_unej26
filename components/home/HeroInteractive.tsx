@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useRef } from "react";
-import Link from "next/link";
 import BlurText from "@/components/BlurText";
 import GradientText from "@/components/GradientText";
-import Magnet from "@/components/Magnet";
 import ShinyText from "@/components/ShinyText";
 import FadeContent from "@/components/FadeContent";
 import CountUp from "@/components/CountUp";
@@ -38,27 +36,8 @@ export function HeroSection() {
       <div className="pointer-events-none absolute top-1/3 -right-20 w-[380px] h-[380px] rounded-full bg-brand-300/30 blur-3xl animate-float" />
       <div className="pointer-events-none absolute bottom-0 left-1/3 w-[520px] h-[280px] rounded-full bg-mist/60 blur-3xl animate-pulse-soft" />
 
-      <svg
-        className="pointer-events-none absolute right-[-8%] top-[18%] w-[55vw] max-w-[640px] opacity-[0.12] text-brand-700 animate-float"
-        viewBox="0 0 400 400"
-        fill="none"
-        aria-hidden
-      >
-        <circle cx="200" cy="200" r="160" stroke="currentColor" strokeWidth="1.5" />
-        <circle
-          cx="200"
-          cy="200"
-          r="110"
-          stroke="currentColor"
-          strokeWidth="1"
-          strokeDasharray="6 10"
-        />
-        <path d="M200 60 L260 160 L200 140 L140 160 Z" fill="currentColor" opacity="0.35" />
-        <path d="M120 230 L200 340 L280 230 L200 250 Z" fill="currentColor" opacity="0.25" />
-      </svg>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24 flex flex-col justify-center min-h-[min(92vh,920px)]">
-        <div className="max-w-3xl space-y-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20 flex flex-col lg:flex-row items-center justify-between gap-12 min-h-[min(92vh,920px)]">
+        <div className="flex-1 max-w-2xl space-y-8">
           <FadeContent blur duration={900} className="space-y-3">
             <ShinyText
               text="PLATFORM LITERASI POLITIK"
@@ -92,63 +71,52 @@ export function HeroSection() {
             agar pemilih membaca fakta sebelum memilih.
           </p>
 
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <Magnet padding={40} magnetStrength={3}>
-              <Link href="/kandidat" className="btn-primary">
-                Jelajahi Kandidat
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </Link>
-            </Magnet>
-            <Magnet padding={40} magnetStrength={3}>
-              <Link href="/bandingkan" className="btn-gold">
-                Bandingkan
-              </Link>
-            </Magnet>
-            <Link href="/asisten" className="btn-ghost">
-              Tanya Asisten
-            </Link>
-          </div>
+          <form
+            action="/kandidat"
+            method="GET"
+            className="pt-2 max-w-2xl"
+          >
+            <label className="sr-only" htmlFor="hero-search">
+              Cari kandidat
+            </label>
+            <div className="group relative flex items-center rounded-lg border border-line-strong bg-white/80 backdrop-blur-xl shadow-soft focus-within:border-sage focus-within:shadow-lift transition-all">
+              <svg
+                className="w-5 h-5 text-ink-muted absolute left-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+              <input
+                id="hero-search"
+                type="text"
+                name="q"
+                placeholder="Cari nama, partai, atau dapil…"
+                className="w-full bg-transparent pl-14 pr-36 py-4 text-sm sm:text-base text-ink placeholder:text-ink-muted/70 focus:outline-none"
+              />
+              <button
+                type="submit"
+                className="absolute right-2 px-5 py-2.5 rounded-md bg-brand-700 text-cream text-sm font-semibold hover:bg-brand-600 transition-colors"
+              >
+                Cari
+              </button>
+            </div>
+          </form>
         </div>
 
-        <form
-          action="/kandidat"
-          method="GET"
-          className="mt-14 max-w-2xl"
-        >
-          <label className="sr-only" htmlFor="hero-search">
-            Cari kandidat
-          </label>
-          <div className="group relative flex items-center rounded-lg border border-line-strong bg-white/80 backdrop-blur-xl shadow-soft focus-within:border-sage focus-within:shadow-lift transition-all">
-            <svg
-              className="w-5 h-5 text-ink-muted absolute left-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-            <input
-              id="hero-search"
-              type="text"
-              name="q"
-              placeholder="Cari nama, partai, atau dapil…"
-              className="w-full bg-transparent pl-14 pr-36 py-4 text-sm sm:text-base text-ink placeholder:text-ink-muted/70 focus:outline-none"
-            />
-            <button
-              type="submit"
-              className="absolute right-2 px-5 py-2.5 rounded-md bg-brand-700 text-cream text-sm font-semibold hover:bg-brand-600 transition-colors"
-            >
-              Cari
-            </button>
-          </div>
-        </form>
+        <div className="flex-1 w-full max-w-md lg:max-w-lg flex justify-center items-center relative z-20">
+          <img
+            src="/images/cari_kandidat.png"
+            alt="Cari Kandidat Politrack"
+            className="w-full h-auto object-contain drop-shadow-2xl animate-float"
+          />
+        </div>
       </div>
 
       <div className="absolute bottom-0 inset-x-0 h-24 bg-gradient-to-t from-cream to-transparent pointer-events-none" />
