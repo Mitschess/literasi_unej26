@@ -13,7 +13,6 @@ import {
 import SpotlightCard from "@/components/SpotlightCard";
 import AnimatedContent from "@/components/AnimatedContent";
 import ClickSpark from "@/components/ClickSpark";
-import Magnet from "@/components/Magnet";
 import BlurText from "@/components/BlurText";
 import FadeContent from "@/components/FadeContent";
 
@@ -135,11 +134,9 @@ export default function Home() {
                     lengkap dengan sitasi sumber, tanpa mendorong pilihan politik.
                   </p>
                 </div>
-                <Magnet padding={36} magnetStrength={2.5}>
-                  <Link href="/asisten" className="btn-gold shrink-0">
-                    Buka Asisten AI
-                  </Link>
-                </Magnet>
+                <Link href="/asisten" className="btn-gold shrink-0">
+                  Buka Asisten AI
+                </Link>
               </div>
             </div>
           </AnimatedContent>
