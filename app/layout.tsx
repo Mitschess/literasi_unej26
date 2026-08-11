@@ -3,6 +3,7 @@ import { Source_Sans_3, Source_Serif_4, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { Providers } from "./providers";
 
 const sourceSans = Source_Sans_3({
   variable: "--font-source-sans",
@@ -46,9 +47,11 @@ export default function RootLayout({
       className={`${sourceSans.variable} ${sourceSerif.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-cream text-ink font-sans">
-        <Navbar />
-        <main className="flex-1 w-full">{children}</main>
-        <Footer />
+        <Providers>
+          <Navbar />
+          <main className="flex-1 w-full">{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
