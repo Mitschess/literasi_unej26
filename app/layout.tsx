@@ -34,6 +34,11 @@ export const metadata: Metadata = {
     "verifikasi fakta",
     "janji politik",
   ],
+  icons: {
+    icon: "/logo.svg",
+    shortcut: "/logo.svg",
+    apple: "/logo.svg",
+  },
 };
 
 export default function RootLayout({

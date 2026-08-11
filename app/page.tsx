@@ -18,7 +18,7 @@ import BlurText from "@/components/BlurText";
 import FadeContent from "@/components/FadeContent";
 
 export default function Home() {
-  const featuredCandidates = mockCandidates.slice(0, 3);
+  const featuredCandidates = mockCandidates.slice(0, 4);
   const featuredArticles = mockArticles.slice(0, 3);
 
   return (
@@ -48,7 +48,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-6 items-start">
             {featuredCandidates.map((candidate, index) => (
               <AnimatedContent
                 key={candidate.id}

@@ -66,7 +66,7 @@ export function HeroSection() {
             >
               <TypewriterText
                 phrases={[
-                  "bukan janji yang mengambang.",
+                  "bukan janji palsu.",
                   "bukan klaim tanpa data.",
                   "bukan narasi tanpa bukti.",
                   "bukan sekadar retorika.",
@@ -86,12 +86,12 @@ export function HeroSection() {
           <form
             action="/kandidat"
             method="GET"
-            className="pt-2 max-w-2xl"
+            className="pt-2 max-w-2xl outline-none focus:outline-none focus-visible:outline-none"
           >
             <label className="sr-only" htmlFor="hero-search">
               Cari kandidat
             </label>
-            <div className="group relative flex items-center rounded-lg border border-line-strong bg-white/80 backdrop-blur-xl shadow-soft focus-within:border-sage focus-within:shadow-lift transition-all">
+            <div className="group relative flex items-center rounded-lg bg-white/80 backdrop-blur-xl shadow-soft transition-all outline-none focus:outline-none focus-visible:outline-none">
               <svg
                 className="w-5 h-5 text-ink-muted absolute left-5"
                 fill="none"
@@ -110,11 +110,11 @@ export function HeroSection() {
                 type="text"
                 name="q"
                 placeholder="Cari nama, partai, atau dapil…"
-                className="w-full bg-transparent pl-14 pr-36 py-4 text-sm sm:text-base text-ink placeholder:text-ink-muted/70 focus:outline-none"
+                className="w-full bg-transparent pl-14 pr-36 py-4 text-sm sm:text-base text-ink placeholder:text-ink-muted/70 border-none outline-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0"
               />
               <button
                 type="submit"
-                className="absolute right-2 px-5 py-2.5 rounded-md bg-brand-700 text-cream text-sm font-semibold hover:bg-brand-600 transition-colors"
+                className="absolute right-2 px-5 py-2.5 rounded-md bg-brand-700 text-cream text-sm font-semibold hover:bg-brand-600 transition-colors focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0"
               >
                 Cari
               </button>
