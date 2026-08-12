@@ -7,7 +7,7 @@ import { BijakCard, BijakLabel } from "@/components/literacy/BijakChrome";
 /* ── Slot gambar — isi `src` dengan path di /public/images/... ── */
 const SIMULASI_IMAGES = {
   hero: {
-    src: "",
+    src: "/images/assets/simulasi_TPS.png",
     alt: "Ilustrasi Suasana TPS",
     label: "Gambar Slot: Hero Simulasi TPS",
   },

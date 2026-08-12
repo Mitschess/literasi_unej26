@@ -250,7 +250,7 @@ export default function Pemilu101Page() {
                 {/* Image Slot for Highlight Banner */}
                 <div className="md:col-span-5">
                   <ImagePlaceholder
-                    src="/images/assets/kandidat-kepala-daerah.png"
+                    src="/images/assets/simulasi_TPS.png"
                     alt="Simulasi TPS"
                     label="Gambar Slot: Simulasi TPS"
                     aspectRatio="aspect-[4/3]"
