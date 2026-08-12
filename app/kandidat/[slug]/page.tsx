@@ -251,8 +251,9 @@ export default function CandidateDetailPage() {
           <div className="flex overflow-x-auto border-t border-line bg-[#F8FAFC] no-scrollbar sm:grid sm:grid-cols-7 sm:overflow-visible">
             {tabs.map((tab) => {
               const isActive = activeTab === tab.id;
-              const hasCount = typeof tab.count === "number";
-              const hasItems = hasCount && tab.count > 0;
+              const count = tab.count;
+              const hasCount = typeof count === "number";
+              const hasItems = hasCount && count > 0;
 
               return (
                 <button
@@ -281,12 +282,12 @@ export default function CandidateDetailPage() {
                       }`}
                       title={
                         hasItems
-                          ? `${tab.count} item`
+                          ? `${count} item`
                           : "Belum ada data"
                       }
                       aria-label={
                         hasItems
-                          ? `${tab.count} item di ${tab.label}`
+                          ? `${count} item di ${tab.label}`
                           : `Belum ada data di ${tab.label}`
                       }
                     />
