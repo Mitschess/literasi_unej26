@@ -49,7 +49,7 @@ export default function AIAssistantPage() {
       id: "msg-0",
       role: "assistant",
       content:
-        "Halo! Saya Political Information Assistant POLITRACK. Saya siap membantu Anda memahami profil, rekam jejak, program kerja, dan status janji politik kandidat secara transparan dan netral.\n\nSilakan ajukan pertanyaan seputar data kandidat yang terdaftar.",
+        "Halo! Saya Political Information Assistant POLITRACK. Saya siap membantu Anda memahami profil, rekam jejak, program kerja, dan status janji politik kandidat secara transparan dan netral.\n\nSetiap jawaban substantif dilengkapi referensi situs resmi terverifikasi (KPU, DPR, BPS, Bawaslu, dll.) yang bisa Anda buka langsung.",
       timestamp: "11:15",
     },
   ]);
@@ -189,7 +189,7 @@ export default function AIAssistantPage() {
 
                   {msg.sources && msg.sources.length > 0 && (
                     <div className="border-t border-line pt-3">
-                      <SourceCitation sources={msg.sources} compact={true} />
+                      <SourceCitation sources={msg.sources} />
                     </div>
                   )}
                 </div>

@@ -12,32 +12,32 @@ const SIMULASI_IMAGES = {
     label: "Gambar Slot: Hero Simulasi TPS",
   },
   step1: {
-    src: "",
+    src: "/images/assets/meja regis.png",
     alt: "Meja Registrasi KPPS",
     label: "Gambar Slot: Meja Registrasi KTP & C6",
   },
   step2: {
-    src: "",
+    src: "/images/assets/bilik_suara.png",
     alt: "Bilik Suara & Surat Suara",
     label: "Gambar Slot: Bilik Suara & Surat Suara",
   },
   step3: {
-    src: "",
+    src: "/images/assets/celup_tinta.png",
     alt: "Celup Tinta KPU",
     label: "Gambar Slot: Celup Tinta TPS",
   },
 } as const;
 
 const STEPS = [
-  { id: 1, short: "Registrasi", icon: "📋" },
-  { id: 2, short: "Bilik Suara", icon: "🗳️" },
-  { id: 3, short: "Celup Tinta", icon: "🖐️" },
+  { id: 1, short: "Registrasi", icon: "" },
+  { id: 2, short: "Bilik Suara", icon: "" },
+  { id: 3, short: "Celup Tinta", icon: "" },
 ] as const;
 
 const PASLON = [
-  { id: "paslon-1", num: "01", name: "Pasangan Calon 01" },
-  { id: "paslon-2", num: "02", name: "Pasangan Calon 02" },
-  { id: "paslon-3", num: "03", name: "Pasangan Calon 03" },
+  { id: "paslon-1", num: "01", name: "Pasangan Calon 01", image: "/images/assets/paslon1.png" },
+  { id: "paslon-2", num: "02", name: "Pasangan Calon 02", image: "/images/assets/paslon2.png" },
+  { id: "paslon-3", num: "03", name: "Pasangan Calon 03", image: "/images/assets/paslon3.png" },
 ] as const;
 
 function IconArrowRight({ className = "h-4 w-4" }: { className?: string }) {
@@ -178,26 +178,26 @@ export default function SimulasiTPS() {
                 </p>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div className="mx-auto grid max-w-2xl gap-3 sm:grid-cols-2">
                 {[
                   { label: "KTP-el / Surat Keterangan", emoji: "🪪" },
                   { label: "Formulir C6 (Undangan Pemilih)", emoji: "📄" },
                 ].map((doc) => (
                   <div
                     key={doc.label}
-                    className={`flex items-center gap-3 rounded-2xl border p-4 transition ${
+                    className={`relative flex flex-col items-center gap-2 rounded-2xl border p-4 text-center transition ${
                       docsReady
                         ? "border-sage/50 bg-sage/10"
                         : "border-line bg-brand-50/50"
                     }`}
                   >
                     <span className="text-2xl" aria-hidden>{doc.emoji}</span>
-                    <div className="flex-1">
+                    <div>
                       <p className="text-xs font-bold text-brand-800">{doc.label}</p>
                       <p className="text-[11px] text-ink-muted">Dokumen wajib</p>
                     </div>
                     {docsReady && (
-                      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-sage text-white">
+                      <span className="absolute right-3 top-3 flex h-7 w-7 items-center justify-center rounded-full bg-sage text-white">
                         <IconCheck className="h-3.5 w-3.5" />
                       </span>
                     )}
@@ -205,17 +205,19 @@ export default function SimulasiTPS() {
                 ))}
               </div>
 
-              <button
-                type="button"
-                onClick={() => setDocsReady(true)}
-                className={`w-full rounded-2xl border-2 border-dashed p-4 text-sm font-bold transition sm:w-auto sm:px-6 ${
-                  docsReady
-                    ? "border-sage bg-sage/10 text-brand-800"
-                    : "border-brand-300 bg-white text-brand-800 hover:border-sage hover:bg-brand-50"
-                }`}
-              >
-                {docsReady ? "✅ Dokumen sudah diserahkan ke KPPS" : "📋 Simulasikan: Serahkan Dokumen"}
-              </button>
+              <div className="flex justify-center">
+                <button
+                  type="button"
+                  onClick={() => setDocsReady(true)}
+                  className={`inline-flex w-fit items-center rounded-2xl border-2 border-dashed px-6 py-4 text-sm font-bold transition ${
+                    docsReady
+                      ? "border-sage bg-sage/10 text-brand-800"
+                      : "border-brand-300 bg-white text-brand-800 hover:border-sage hover:bg-brand-50"
+                  }`}
+                >
+                  {docsReady ? "✅ Dokumen sudah diserahkan ke KPPS" : "Klik untuk Menyerahkan Dokumen"}
+                </button>
+              </div>
 
               <div className="flex justify-end border-t border-line pt-6">
                 <button
@@ -282,48 +284,16 @@ export default function SimulasiTPS() {
                             : "border-line hover:border-sage hover:shadow-md"
                         }`}
                       >
-                        {/* Header surat suara */}
-                        <div className={`px-3 py-2 text-center text-[10px] font-bold uppercase tracking-wider ${
-                          isSelected ? "bg-brand-800 text-cream" : "bg-brand-100 text-brand-800"
-                        }`}>
-                          Pasangan Calon
-                        </div>
-
-                        <div className="flex flex-col items-center gap-3 p-4">
-                          {/* Nomor urut */}
-                          <div className={`flex h-14 w-14 items-center justify-center rounded-full border-4 font-display text-xl font-black transition ${
-                            isSelected
-                              ? "border-brand-800 bg-brand-800 text-cream"
-                              : "border-brand-200 bg-white text-brand-800 group-hover:border-sage"
-                          }`}>
-                            {item.num}
-                          </div>
-
-                          {/* Mini slot foto paslon — bisa diisi nanti */}
-                          <div className="flex h-16 w-full items-center justify-center rounded-lg border border-dashed border-brand-200 bg-brand-50/80">
-                            <span className="text-[10px] font-semibold text-ink-muted">
-                              Slot foto paslon
-                            </span>
-                          </div>
-
-                          <p className="text-center text-xs font-bold text-brand-800">{item.name}</p>
-
-                          {/* Area coblos */}
-                          <div className={`relative flex h-10 w-10 items-center justify-center rounded-full border-2 transition ${
-                            isSelected
-                              ? "border-brand-800 bg-brand-800"
-                              : "border-brand-300 bg-white group-hover:border-sage"
-                          }`}>
-                            {isSelected ? (
-                              <span className="text-lg text-cream">✓</span>
-                            ) : (
-                              <span className="h-3 w-3 rounded-full bg-brand-200 group-hover:bg-sage/50" />
-                            )}
-                          </div>
+                        <div className="aspect-[1/2] w-full overflow-hidden bg-brand-50 sm:min-h-[420px]">
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className="h-full w-full object-cover object-top"
+                          />
                         </div>
 
                         {isSelected && (
-                          <div className="border-t border-sage/30 bg-sage/15 px-3 py-2 text-center text-[10px] font-bold text-brand-800">
+                          <div className="absolute inset-x-0 bottom-0 bg-sage/90 px-3 py-2 text-center text-[10px] font-bold text-white">
                             ✓ Dicoblos Sah
                           </div>
                         )}
