@@ -148,7 +148,7 @@ export function BijakFeatureCard({
       <div className="flex items-start justify-between gap-4">
         <BijakLabel variant="teal">{label}</BijakLabel>
         {image && (
-          <div className="h-16 w-16 shrink-0 rounded-2xl bg-white/80 border border-line/60 p-2 shadow-xs">
+          <div className="h-16 w-16 shrink-0 flex items-center justify-center">
             <img src={image} alt={title} className="h-full w-full object-contain" />
           </div>
         )}

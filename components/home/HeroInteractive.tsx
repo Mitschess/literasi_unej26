@@ -6,6 +6,8 @@ import GradientText from "@/components/GradientText";
 import ShinyText from "@/components/ShinyText";
 import FadeContent from "@/components/FadeContent";
 import CountUp from "@/components/CountUp";
+import { mockCandidates } from "@/lib/data/candidates";
+import { strategicIssues, antiHoaxTips } from "@/lib/data/issues";
 
 import { TypewriterText } from "@/components/TypewriterText";
 
@@ -223,9 +225,9 @@ export function PipelineSection() {
 
 export function PrinciplesMarquee() {
   const stats = [
-    { label: "Prinsip Netralitas", value: 1, suffix: "" },
-    { label: "Sumber Tertelusur", value: 100, suffix: "%" },
-    { label: "Tanpa Rekomendasi", value: 0, suffix: "" },
+    { label: "Kandidat Terdata", value: mockCandidates.length, suffix: "+" },
+    { label: "Isu Strategis", value: strategicIssues.length, suffix: "" },
+    { label: "Tips Anti-Hoax", value: antiHoaxTips.length, suffix: "" },
   ];
 
   return (

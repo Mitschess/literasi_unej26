@@ -2,6 +2,8 @@
 // POLITRACK — Isu Strategis Data (inspired by Bijak Memilih)
 // ============================================================
 
+import type { Source } from "@/lib/types";
+
 export interface StrategicIssue {
   id: string;
   slug: string;
@@ -12,6 +14,7 @@ export interface StrategicIssue {
   context: string;
   relatedLaw?: string;
   subIssues: SubIssue[];
+  sources: Source[];
 }
 
 export interface SubIssue {
@@ -46,6 +49,33 @@ export const strategicIssues: StrategicIssue[] = [
       { id: "si-01b", title: "Carbon tax", description: "Implementasi pajak karbon untuk menurunkan emisi." },
       { id: "si-01c", title: "Green jobs", description: "Penciptaan lapangan kerja hijau di sektor energi terbarukan." },
     ],
+    sources: [
+      {
+        id: "isu-01-src-1",
+        name: "Kementerian ESDM — Portal Resmi",
+        url: "https://www.esdm.go.id/",
+        sourceType: "government",
+        publisher: "Kementerian ESDM",
+        accessedAt: "2026-08-12",
+      },
+      {
+        id: "isu-01-src-2",
+        name: "Bappenas — Rencana Pembangunan Jangka Menengah Nasional",
+        url: "https://www.bappenas.go.id/",
+        sourceType: "government",
+        publisher: "Bappenas",
+        accessedAt: "2026-08-12",
+      },
+      {
+        id: "isu-01-src-3",
+        name: "JDIH BPK — UU No. 30/2007 tentang Energi",
+        url: "https://peraturan.bpk.go.id/Details/39987/uu-no-30-tahun-2007",
+        sourceType: "public_document",
+        publisher: "Badan Pemeriksa Keuangan",
+        publishedAt: "2007-08-10",
+        accessedAt: "2026-08-12",
+      },
+    ],
   },
   {
     id: "isu-02",
@@ -62,6 +92,33 @@ export const strategicIssues: StrategicIssue[] = [
       { id: "si-02a", title: "Jaminan sosial pekerja informal", description: "Perluasan BPJS untuk pekerja non-formal." },
       { id: "si-02b", title: "Gig economy", description: "Regulasi untuk pekerja ojol, kurir, dan freelancer." },
       { id: "si-02c", title: "Upah layak", description: "Penetapan upah minimum yang berkeadilan." },
+    ],
+    sources: [
+      {
+        id: "isu-02-src-1",
+        name: "BPS — Statistik Ketenagakerjaan",
+        url: "https://www.bps.go.id/id/statistics-table/2/MTQ0/#subject-144",
+        sourceType: "state_institution",
+        publisher: "Badan Pusat Statistik",
+        accessedAt: "2026-08-12",
+      },
+      {
+        id: "isu-02-src-2",
+        name: "Kementerian Ketenagakerjaan — Portal Resmi",
+        url: "https://kemnaker.go.id/",
+        sourceType: "government",
+        publisher: "Kementerian Ketenagakerjaan",
+        accessedAt: "2026-08-12",
+      },
+      {
+        id: "isu-02-src-3",
+        name: "JDIH BPK — UU No. 6/2023 tentang Cipta Kerja",
+        url: "https://peraturan.bpk.go.id/Details/244444/uu-no-6-tahun-2023",
+        sourceType: "public_document",
+        publisher: "Badan Pemeriksa Keuangan",
+        publishedAt: "2023-03-31",
+        accessedAt: "2026-08-12",
+      },
     ],
   },
   {
@@ -80,6 +137,33 @@ export const strategicIssues: StrategicIssue[] = [
       { id: "si-03b", title: "Kebebasan pers", description: "Perlindungan jurnalis dari intimidasi dan kriminalisasi." },
       { id: "si-03c", title: "Kebebasan akademik", description: "Menjamin kebebasan kampus untuk mengkritik kebijakan." },
     ],
+    sources: [
+      {
+        id: "isu-03-src-1",
+        name: "Reporters Without Borders — Indonesia",
+        url: "https://rsf.org/en/country/indonesia",
+        sourceType: "civil_society",
+        publisher: "Reporters Without Borders",
+        accessedAt: "2026-08-12",
+      },
+      {
+        id: "isu-03-src-2",
+        name: "Kementerian Komunikasi dan Informatika",
+        url: "https://www.kominfo.go.id/",
+        sourceType: "government",
+        publisher: "Kominfo",
+        accessedAt: "2026-08-12",
+      },
+      {
+        id: "isu-03-src-3",
+        name: "JDIH BPK — UU No. 1/2024 (Revisi UU ITE)",
+        url: "https://peraturan.bpk.go.id/",
+        sourceType: "public_document",
+        publisher: "Badan Pemeriksa Keuangan",
+        publishedAt: "2024-01-02",
+        accessedAt: "2026-08-12",
+      },
+    ],
   },
   {
     id: "isu-04",
@@ -97,6 +181,32 @@ export const strategicIssues: StrategicIssue[] = [
       { id: "si-04b", title: "UU Perampasan Aset", description: "Pengesahan undang-undang untuk merampas aset hasil korupsi." },
       { id: "si-04c", title: "Transparansi APBN/APBD", description: "Meningkatkan keterbukaan anggaran negara." },
     ],
+    sources: [
+      {
+        id: "isu-04-src-1",
+        name: "KPK — Komisi Pemberantasan Korupsi",
+        url: "https://www.kpk.go.id/",
+        sourceType: "state_institution",
+        publisher: "KPK",
+        accessedAt: "2026-08-12",
+      },
+      {
+        id: "isu-04-src-2",
+        name: "Transparency International — Corruption Perceptions Index",
+        url: "https://www.transparency.org/en/cpi",
+        sourceType: "civil_society",
+        publisher: "Transparency International",
+        accessedAt: "2026-08-12",
+      },
+      {
+        id: "isu-04-src-3",
+        name: "Indonesia Corruption Watch",
+        url: "https://antikorupsi.org/",
+        sourceType: "civil_society",
+        publisher: "ICW",
+        accessedAt: "2026-08-12",
+      },
+    ],
   },
   {
     id: "isu-05",
@@ -113,6 +223,32 @@ export const strategicIssues: StrategicIssue[] = [
       { id: "si-05b", title: "Akses pendidikan 3T", description: "Pemerataan pendidikan di daerah terdepan, terluar, tertinggal." },
       { id: "si-05c", title: "Kurikulum", description: "Relevansi kurikulum dengan kebutuhan dunia kerja." },
     ],
+    sources: [
+      {
+        id: "isu-05-src-1",
+        name: "Kemendikbudristek — Portal Resmi",
+        url: "https://www.kemdikbud.go.id/",
+        sourceType: "government",
+        publisher: "Kemendikbudristek",
+        accessedAt: "2026-08-12",
+      },
+      {
+        id: "isu-05-src-2",
+        name: "BPS — Statistik Pendidikan",
+        url: "https://www.bps.go.id/id/statistics-table/2/MTQ1/#subject-145",
+        sourceType: "state_institution",
+        publisher: "Badan Pusat Statistik",
+        accessedAt: "2026-08-12",
+      },
+      {
+        id: "isu-05-src-3",
+        name: "OECD — Programme for International Student Assessment (PISA)",
+        url: "https://www.oecd.org/pisa/",
+        sourceType: "other",
+        publisher: "OECD",
+        accessedAt: "2026-08-12",
+      },
+    ],
   },
   {
     id: "isu-06",
@@ -128,6 +264,32 @@ export const strategicIssues: StrategicIssue[] = [
       { id: "si-06a", title: "Intervensi stunting", description: "Program 1000 hari pertama kehidupan." },
       { id: "si-06b", title: "Reformasi BPJS", description: "Memperbaiki sistem jaminan kesehatan nasional." },
       { id: "si-06c", title: "Nakes desa", description: "Pemenuhan tenaga kesehatan di pedesaan." },
+    ],
+    sources: [
+      {
+        id: "isu-06-src-1",
+        name: "BKKBN — Badan Kependudukan dan Keluarga Berencana Nasional",
+        url: "https://www.bkkbn.go.id/",
+        sourceType: "government",
+        publisher: "BKKBN",
+        accessedAt: "2026-08-12",
+      },
+      {
+        id: "isu-06-src-2",
+        name: "BPJS Kesehatan — Portal Resmi",
+        url: "https://bpjs-kesehatan.go.id/",
+        sourceType: "state_institution",
+        publisher: "BPJS Kesehatan",
+        accessedAt: "2026-08-12",
+      },
+      {
+        id: "isu-06-src-3",
+        name: "Kementerian Kesehatan — Portal Resmi",
+        url: "https://www.kemkes.go.id/",
+        sourceType: "government",
+        publisher: "Kementerian Kesehatan",
+        accessedAt: "2026-08-12",
+      },
     ],
   },
 ];

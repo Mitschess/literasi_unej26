@@ -7,9 +7,9 @@ import {
   BijakShell,
   BijakCrumb,
   BijakHero,
-  BijakDisclaimer,
   BijakCard,
 } from "@/components/literacy/BijakChrome";
+import { SourceCitation } from "@/components/ui/SourceCitation";
 
 const DEFAULT_SLUG = "transisi-energi";
 
@@ -121,6 +121,11 @@ function IssueDetail({ issue }: { issue: StrategicIssue }) {
             </p>
           </div>
         )}
+        {issue.sources.length > 0 && (
+          <div className="rounded-2xl border border-brand-200 bg-white p-4 sm:p-5">
+            <SourceCitation sources={issue.sources} />
+          </div>
+        )}
         <p className="text-xs text-ink-muted">{issue.summary}</p>
       </BijakCard>
     </FadeContent>
@@ -165,12 +170,6 @@ export default function StrategicIssuesPage() {
             <IssueDetail issue={activeIssue} />
           </main>
         </div>
-
-        <BijakDisclaimer>
-          Informasi dirangkum dari berbagai sumber publik untuk konteks edukatif.
-          Verifikasi klaim melalui rekam jejak kandidat dan sumber resmi sebelum
-          membuat keputusan.
-        </BijakDisclaimer>
       </div>
     </BijakShell>
   );

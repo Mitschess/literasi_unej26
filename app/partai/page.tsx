@@ -262,11 +262,11 @@ export default function PartyPage() {
                 Telusuri profil, visi-misi, dan rekam jejak partai yang terdaftar di Pemilu legislatif terakhir.
               </p>
             </div>
-            <div className="h-24 w-24 shrink-0 self-center overflow-hidden rounded-2xl border border-line bg-white p-1.5 sm:h-32 sm:w-32">
+            <div className="h-24 w-24 shrink-0 self-center sm:h-32 sm:w-32">
               <img
-                src="/images/parpol/kumpulan_partai.png"
-                alt="Logo partai politik Indonesia"
-                className="h-full w-full object-contain"
+                src="/images/assets/direktori.png"
+                alt="Direktori partai politik Indonesia"
+                className="h-full w-full object-contain drop-shadow-md"
               />
             </div>
           </div>

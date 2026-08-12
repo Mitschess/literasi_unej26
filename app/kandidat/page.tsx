@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState, useMemo, Suspense, useCallback } from "react";
+import React, { useState, useMemo, Suspense, useCallback, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { mockCandidates } from "@/lib/data/candidates";
 import { CandidateCard } from "@/components/candidate/CandidateCard";
+import { SearchableSelect } from "@/components/ui/SearchableSelect";
 import { getCandidateCountsByProvince } from "@/lib/map/province-stats";
 
 const IndonesiaMap = dynamic(() => import("@/components/map/IndonesiaMap"), {
@@ -14,6 +15,8 @@ const IndonesiaMap = dynamic(() => import("@/components/map/IndonesiaMap"), {
     <div className="h-[220px] sm:h-[320px] animate-pulse rounded-2xl bg-mist/30" />
   ),
 });
+
+const CARDS_PER_PAGE = 8;
 
 function CandidateListContent() {
   const searchParams = useSearchParams();
@@ -28,6 +31,7 @@ function CandidateListContent() {
   const [selectedElectionType, setSelectedElectionType] = useState(
     initialType || "all",
   );
+  const [currentPage, setCurrentPage] = useState(1);
   const provinceCounts = useMemo(
     () => getCandidateCountsByProvince(mockCandidates),
     [],
@@ -43,6 +47,36 @@ function CandidateListContent() {
   const electionTypes = Array.from(
     new Set(mockCandidates.map((c) => c.election.type)),
   );
+
+  const partyOptions = useMemo(
+    () => [
+      { value: "all", label: "Semua Partai" },
+      ...parties.map((p) => ({ value: p, label: p })),
+    ],
+    [parties],
+  );
+
+  const provinceOptions = useMemo(
+    () => [
+      { value: "all", label: "Semua Wilayah" },
+      ...provinces.sort().map((prov) => ({ value: prov, label: prov })),
+    ],
+    [provinces],
+  );
+
+  const electionOptions = useMemo(
+    () => [
+      { value: "all", label: "Semua Pemilu" },
+      ...electionTypes.map((type) => ({ value: type, label: type })),
+    ],
+    [electionTypes],
+  );
+
+  const activeFilters = [
+    selectedParty !== "all" && { key: "party", label: selectedParty },
+    selectedProvince !== "all" && { key: "province", label: selectedProvince },
+    selectedElectionType !== "all" && { key: "type", label: selectedElectionType },
+  ].filter(Boolean) as { key: string; label: string }[];
 
   const filteredCandidates = useMemo(() => {
     return mockCandidates.filter((c) => {
@@ -83,6 +117,30 @@ function CandidateListContent() {
       return true;
     });
   }, [searchQuery, selectedParty, selectedProvince, selectedElectionType]);
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredCandidates.length / CARDS_PER_PAGE),
+  );
+
+  const paginatedCandidates = useMemo(() => {
+    const start = (currentPage - 1) * CARDS_PER_PAGE;
+    return filteredCandidates.slice(start, start + CARDS_PER_PAGE);
+  }, [filteredCandidates, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedParty, selectedProvince, selectedElectionType]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const pageStart =
+    filteredCandidates.length === 0 ? 0 : (currentPage - 1) * CARDS_PER_PAGE + 1;
+  const pageEnd = Math.min(currentPage * CARDS_PER_PAGE, filteredCandidates.length);
 
   const updateProvinceInUrl = useCallback(
     (province: string) => {
@@ -195,121 +253,192 @@ function CandidateListContent() {
       </div>
 
       {/* SEARCH AND FILTER BAR */}
-      <div className="p-5 rounded-2xl bg-white border border-line shadow-sm space-y-4">
-        {/* Search input */}
-        <div className="relative">
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Cari kandidat berdasarkan nama, partai, atau daerah pemilihan..."
-            className="w-full pl-10 pr-4 py-3 rounded-xl bg-cream border border-line text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sage"
-          />
-          <svg
-            className="w-5 h-5 text-ink-muted absolute left-3 top-3.5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
-        </div>
-
-        {/* Dropdown Filters */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {/* Party Filter */}
-          <div>
-            <label className="block text-[11px] font-bold text-ink-muted uppercase mb-1">
-              Partai Politik
-            </label>
-            <select
-              value={selectedParty}
-              onChange={(e) => setSelectedParty(e.target.value)}
-              className="w-full p-2.5 rounded-xl bg-cream border border-line text-xs font-medium focus:outline-none focus:ring-2 focus:ring-sage"
-            >
-              <option value="all">Semua Partai</option>
-              {parties.map((p) => (
-                <option key={p} value={p}>
-                  {p}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Province Filter */}
-          <div>
-            <label className="block text-[11px] font-bold text-ink-muted uppercase mb-1">
-              Provinsi / Wilayah
-            </label>
-            <select
-              value={selectedProvince}
-              onChange={(e) => handleProvinceDropdownChange(e.target.value)}
-              className="w-full p-2.5 rounded-xl bg-cream border border-line text-xs font-medium focus:outline-none focus:ring-2 focus:ring-sage"
-            >
-              <option value="all">Semua Wilayah</option>
-              {provinces.map((prov) => (
-                <option key={prov} value={prov}>
-                  {prov}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Election Type Filter */}
-          <div>
-            <label className="block text-[11px] font-bold text-ink-muted uppercase mb-1">
-              Jenis Pemilu
-            </label>
-            <select
-              value={selectedElectionType}
-              onChange={(e) => setSelectedElectionType(e.target.value)}
-              className="w-full p-2.5 rounded-xl bg-cream border border-line text-xs font-medium focus:outline-none focus:ring-2 focus:ring-sage"
-            >
-              <option value="all">Semua Pemilu</option>
-              {electionTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {/* Filter stats & Reset */}
-        <div className="flex items-center justify-between text-xs text-ink-muted pt-2 border-t border-line">
-          <span>
-            Menampilkan <strong>{filteredCandidates.length}</strong> kandidat
-          </span>
-          {(searchQuery ||
-            selectedParty !== "all" ||
-            selectedProvince !== "all" ||
-            selectedElectionType !== "all") && (
+      <div className="rounded-2xl border border-line bg-white shadow-sm">
+        <div className="rounded-t-2xl border-b border-line bg-gradient-to-r from-brand-50/80 to-cream px-5 py-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-sage">
+                Filter & Pencarian
+              </p>
+              <p className="mt-0.5 text-xs text-ink-muted">
+                Cari nama kandidat atau saring berdasarkan partai, wilayah, dan jenis pemilu
+              </p>
+            </div>
+            {activeFilters.length > 0 && (
               <button
+                type="button"
                 onClick={() => {
                   setSearchQuery("");
                   setSelectedParty("all");
                   handleProvinceSelect(null);
                   setSelectedElectionType("all");
                 }}
-                className="text-brand-700 font-bold hover:underline"
+                className="rounded-full border border-line bg-white px-3 py-1.5 text-[11px] font-bold text-brand-700 transition hover:border-sage hover:text-sage"
               >
-                Reset Filter
+                Reset semua
               </button>
             )}
+          </div>
+        </div>
+
+        <div className="space-y-4 p-5">
+          {/* Search input */}
+          <div className="relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Cari kandidat berdasarkan nama, partai, atau daerah pemilihan..."
+              className="w-full rounded-xl border border-line bg-cream py-3 pl-10 pr-4 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-sage"
+            />
+            <svg
+              className="absolute left-3 top-3.5 h-5 w-5 text-ink-muted"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </div>
+
+          {/* Searchable Filters */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <SearchableSelect
+              label="Partai Politik"
+              value={selectedParty}
+              onChange={setSelectedParty}
+              options={partyOptions}
+              placeholder="Semua Partai"
+              searchPlaceholder="Cari partai..."
+            />
+            <SearchableSelect
+              label="Provinsi / Wilayah"
+              value={selectedProvince}
+              onChange={handleProvinceDropdownChange}
+              options={provinceOptions}
+              placeholder="Semua Wilayah"
+              searchPlaceholder="Cari provinsi..."
+            />
+            <SearchableSelect
+              label="Jenis Pemilu"
+              value={selectedElectionType}
+              onChange={setSelectedElectionType}
+              options={electionOptions}
+              placeholder="Semua Pemilu"
+              searchPlaceholder="Cari jenis pemilu..."
+            />
+          </div>
+
+          {/* Active filter chips */}
+          {activeFilters.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-ink-muted">
+                Filter aktif:
+              </span>
+              {activeFilters.map((filter) => (
+                <span
+                  key={filter.key}
+                  className="inline-flex items-center gap-1 rounded-full bg-sage/15 px-2.5 py-1 text-[11px] font-semibold text-brand-800 ring-1 ring-sage/25"
+                >
+                  {filter.label}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Filter stats */}
+          <div className="flex items-center justify-between border-t border-line pt-3 text-xs text-ink-muted">
+            <span>
+              {filteredCandidates.length > 0 ? (
+                <>
+                  Menampilkan <strong className="text-ink">{pageStart}–{pageEnd}</strong> dari{" "}
+                  <strong className="text-ink">{filteredCandidates.length}</strong> kandidat
+                </>
+              ) : (
+                <>
+                  Menampilkan <strong className="text-ink">0</strong> kandidat
+                </>
+              )}
+            </span>
+          </div>
         </div>
       </div>
 
       {/* CANDIDATE CARDS GRID */}
       {filteredCandidates.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 items-start">
-          {filteredCandidates.map((candidate) => (
-            <CandidateCard key={candidate.id} candidate={candidate} />
-          ))}
+        <div className="space-y-8">
+          <div
+            id="kandidat-grid"
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 items-start"
+          >
+            {paginatedCandidates.map((candidate) => (
+              <CandidateCard key={candidate.id} candidate={candidate} />
+            ))}
+          </div>
+
+          {totalPages > 1 && (
+            <div className="flex justify-center">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCurrentPage((p) => Math.max(1, p - 1));
+                    document.getElementById("kandidat-grid")?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                  disabled={currentPage === 1}
+                  className="inline-flex items-center gap-2 rounded-full border border-line bg-white px-5 py-2.5 text-xs font-bold text-brand-800 transition hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  ← Sebelumnya
+                </button>
+
+                {totalPages <= 7 &&
+                  Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <button
+                      key={page}
+                      type="button"
+                      onClick={() => {
+                        setCurrentPage(page);
+                        document.getElementById("kandidat-grid")?.scrollIntoView({
+                          behavior: "smooth",
+                          block: "start",
+                        });
+                      }}
+                      className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition ${
+                        currentPage === page
+                          ? "bg-brand-800 text-cream"
+                          : "border border-line bg-white text-ink-muted hover:border-sage hover:text-brand-800"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCurrentPage((p) => Math.min(totalPages, p + 1));
+                    document.getElementById("kandidat-grid")?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                  disabled={currentPage === totalPages}
+                  className="inline-flex items-center gap-2 rounded-full bg-brand-800 px-5 py-2.5 text-xs font-bold text-cream transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  Selanjutnya →
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <div className="p-12 text-center bg-white rounded-3xl border border-line space-y-3">

@@ -82,7 +82,7 @@ export default function Home() {
               {/* CARD 1: ISU STRATEGIS */}
               <div className="p-6 rounded-2xl bg-white border border-line shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between space-y-4 group">
                 <div className="space-y-3">
-                  <div className="w-16 h-16 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center p-2">
+                  <div className="w-16 h-16 flex items-center justify-center">
                     <img src="/images/assets/program-visi-misi.png" alt="Isu Strategis" className="w-full h-full object-contain" />
                   </div>
                   <h3 className="font-extrabold text-xl text-ink group-hover:text-brand-800 transition-colors">
@@ -103,7 +103,7 @@ export default function Home() {
               {/* CARD 2: PEMILU 101 */}
               <div className="p-6 rounded-2xl bg-white border border-line shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between space-y-4 group">
                 <div className="space-y-3">
-                  <div className="w-16 h-16 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center p-2">
+                  <div className="w-16 h-16 flex items-center justify-center">
                     <img src="/images/assets/kandidat-legislatif.png" alt="Panduan Pemilu" className="w-full h-full object-contain" />
                   </div>
                   <h3 className="font-extrabold text-xl text-ink group-hover:text-brand-800 transition-colors">
@@ -124,10 +124,10 @@ export default function Home() {
               {/* CARD 3: CARI PARTAI */}
               <div className="p-6 rounded-2xl bg-white border border-line shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between space-y-4 group">
                 <div className="space-y-3">
-                  <div className="w-16 h-16 rounded-2xl bg-white border border-line flex items-center justify-center p-1 overflow-hidden">
+                  <div className="w-16 h-16 flex items-center justify-center overflow-hidden">
                     <img
-                      src="/images/parpol/kumpulan_partai.png"
-                      alt="Logo partai politik Indonesia"
+                      src="/images/assets/direktori.png"
+                      alt="Direktori partai politik Indonesia"
                       className="w-full h-full object-contain"
                     />
                   </div>

@@ -71,7 +71,7 @@ export const SourceCitation: React.FC<Props> = ({
         </button>
 
         {isOpen && (
-          <div className="absolute left-0 mt-1 w-72 p-3 bg-white rounded-xl shadow-lift border border-line z-50 animate-fade-in">
+          <div className="absolute bottom-full left-0 z-50 mb-1.5 w-72 animate-fade-in rounded-xl border border-line bg-white p-3 shadow-lift">
             <div className="flex items-center justify-between pb-2 mb-2 border-b border-line">
               <span className="text-xs font-bold text-ink">
                 Rincian Sumber Terverifikasi
@@ -100,7 +100,7 @@ export const SourceCitation: React.FC<Props> = ({
                       href={src.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-medium text-brand-700 hover:text-brand-900 hover:underline block truncate"
+                      className="font-medium text-brand-700 hover:text-sage hover:underline block truncate transition-colors"
                     >
                       {src.name}
                     </a>
@@ -128,9 +128,12 @@ export const SourceCitation: React.FC<Props> = ({
           const typeInfo =
             sourceTypeLabels[src.sourceType] || sourceTypeLabels.other;
           return (
-            <div
+            <a
               key={src.id}
-              className="p-2.5 rounded-xl border border-line bg-cream/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
+              href={src.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex flex-col sm:flex-row sm:items-center justify-between gap-2 rounded-xl border border-line bg-cream/60 p-2.5 text-xs transition-all hover:border-sage hover:bg-sage/10 hover:shadow-sm"
             >
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
@@ -140,20 +143,15 @@ export const SourceCitation: React.FC<Props> = ({
                     {typeInfo.label}
                   </span>
                   {src.publisher && (
-                    <span className="text-ink-muted font-medium">
+                    <span className="text-ink-muted font-medium group-hover:text-ink-soft transition-colors">
                       {src.publisher}
                     </span>
                   )}
                 </div>
-                <a
-                  href={src.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-semibold text-ink hover:text-brand-700 transition-colors flex items-center gap-1"
-                >
-                  <span>{src.name}</span>
+                <span className="font-semibold text-brand-800 group-hover:text-sage transition-colors flex items-center gap-1">
+                  <span className="group-hover:underline">{src.name}</span>
                   <svg
-                    className="w-3 h-3 text-ink-muted"
+                    className="w-3 h-3 text-ink-muted group-hover:text-sage transition-colors"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -165,13 +163,13 @@ export const SourceCitation: React.FC<Props> = ({
                       d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                     />
                   </svg>
-                </a>
+                </span>
               </div>
-              <div className="text-[11px] text-ink-muted flex sm:flex-col items-start sm:items-end justify-between gap-1 border-t sm:border-t-0 pt-1 sm:pt-0 border-line">
+              <div className="text-[11px] text-ink-muted group-hover:text-ink-soft flex sm:flex-col items-start sm:items-end justify-between gap-1 border-t sm:border-t-0 pt-1 sm:pt-0 border-line transition-colors">
                 {src.publishedAt && <span>Terbit: {src.publishedAt}</span>}
                 <span>Terakhir Diuji: {src.accessedAt}</span>
               </div>
-            </div>
+            </a>
           );
         })}
       </div>

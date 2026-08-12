@@ -1,14 +1,17 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { mockArticles, mockGlossary } from "@/lib/data/articles";
+
+const GLOSSARY_PER_PAGE = 6;
 
 export default function LiteracyCenterPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [glossaryQuery, setGlossaryQuery] = useState("");
   const [selectedLetter, setSelectedLetter] = useState("all");
   const [copiedTermId, setCopiedTermId] = useState<string | null>(null);
+  const [glossaryPage, setGlossaryPage] = useState(1);
 
   const categories = Array.from(new Set(mockArticles.map((a) => a.category)));
 
@@ -52,6 +55,35 @@ export default function LiteracyCenterPage() {
       return true;
     });
   }, [glossaryQuery, selectedLetter]);
+
+  const glossaryTotalPages = Math.max(
+    1,
+    Math.ceil(filteredGlossary.length / GLOSSARY_PER_PAGE),
+  );
+
+  const paginatedGlossary = useMemo(() => {
+    const start = (glossaryPage - 1) * GLOSSARY_PER_PAGE;
+    return filteredGlossary.slice(start, start + GLOSSARY_PER_PAGE);
+  }, [filteredGlossary, glossaryPage]);
+
+  useEffect(() => {
+    setGlossaryPage(1);
+  }, [glossaryQuery, selectedLetter]);
+
+  useEffect(() => {
+    if (glossaryPage > glossaryTotalPages) {
+      setGlossaryPage(glossaryTotalPages);
+    }
+  }, [glossaryPage, glossaryTotalPages]);
+
+  const glossaryPageStart =
+    filteredGlossary.length === 0
+      ? 0
+      : (glossaryPage - 1) * GLOSSARY_PER_PAGE + 1;
+  const glossaryPageEnd = Math.min(
+    glossaryPage * GLOSSARY_PER_PAGE,
+    filteredGlossary.length,
+  );
 
   const handleCopyDefinition = (id: string, term: string, def: string) => {
     navigator.clipboard.writeText(`${term}: ${def}`);
@@ -216,7 +248,17 @@ export default function LiteracyCenterPage() {
             <div className="flex items-center justify-between text-xs text-ink-muted font-medium">
               <span>Indeks Abjad:</span>
               <span>
-                Menampilkan <strong>{filteredGlossary.length}</strong> istilah
+                {filteredGlossary.length > 0 ? (
+                  <>
+                    Menampilkan{" "}
+                    <strong>{glossaryPageStart}–{glossaryPageEnd}</strong> dari{" "}
+                    <strong>{filteredGlossary.length}</strong> istilah
+                  </>
+                ) : (
+                  <>
+                    Menampilkan <strong>0</strong> istilah
+                  </>
+                )}
               </span>
             </div>
             <div className="flex flex-wrap gap-1">
@@ -247,8 +289,12 @@ export default function LiteracyCenterPage() {
 
         {/* DICTIONARY CARDS GRID */}
         {filteredGlossary.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {filteredGlossary.map((item) => (
+          <div className="space-y-8">
+            <div
+              id="glosarium-grid"
+              className="grid grid-cols-1 md:grid-cols-2 gap-5"
+            >
+              {paginatedGlossary.map((item) => (
               <div
                 key={item.id}
                 className="p-6 rounded-3xl bg-white border border-line shadow-sm hover:shadow-md transition-all duration-200 space-y-3 flex flex-col justify-between relative group"
@@ -301,6 +347,67 @@ export default function LiteracyCenterPage() {
                 )}
               </div>
             ))}
+            </div>
+
+            {glossaryTotalPages > 1 && (
+              <div className="flex justify-center">
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setGlossaryPage((p) => Math.max(1, p - 1));
+                      document.getElementById("glosarium-grid")?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }}
+                    disabled={glossaryPage === 1}
+                    className="inline-flex items-center gap-2 rounded-full border border-line bg-white px-5 py-2.5 text-xs font-bold text-brand-800 transition hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    ← Sebelumnya
+                  </button>
+
+                  {glossaryTotalPages <= 7 &&
+                    Array.from({ length: glossaryTotalPages }, (_, i) => i + 1).map(
+                      (page) => (
+                        <button
+                          key={page}
+                          type="button"
+                          onClick={() => {
+                            setGlossaryPage(page);
+                            document.getElementById("glosarium-grid")?.scrollIntoView({
+                              behavior: "smooth",
+                              block: "start",
+                            });
+                          }}
+                          className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition ${
+                            glossaryPage === page
+                              ? "bg-brand-800 text-cream"
+                              : "border border-line bg-white text-ink-muted hover:border-sage hover:text-brand-800"
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      ),
+                    )}
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setGlossaryPage((p) => Math.min(glossaryTotalPages, p + 1));
+                      document.getElementById("glosarium-grid")?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }}
+                    disabled={glossaryPage === glossaryTotalPages}
+                    className="inline-flex items-center gap-2 rounded-full bg-brand-800 px-5 py-2.5 text-xs font-bold text-cream transition hover:bg-brand-700 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    Selanjutnya →
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           <div className="p-12 text-center bg-white rounded-3xl border border-line space-y-3">

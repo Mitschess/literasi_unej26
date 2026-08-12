@@ -40,34 +40,10 @@ function IconCheckCircle({ className = "h-4 w-4" }: { className?: string }) {
   );
 }
 
-function IconPlayCircle({ className = "h-3.5 w-3.5" }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>
-    </svg>
-  );
-}
-
-function IconCalendar({ className = "h-3.5 w-3.5" }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/>
-    </svg>
-  );
-}
-
 function IconHelpCircle({ className = "h-5 w-5" }: { className?: string }) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
       <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>
-    </svg>
-  );
-}
-
-function IconX({ className = "h-5 w-5" }: { className?: string }) {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
     </svg>
   );
 }
@@ -77,9 +53,6 @@ type TabId = "101" | "simulasi" | "hoax" | "faq";
 export default function Pemilu101Page() {
   const [activeTab, setActiveTab] = useState<TabId>("101");
   const [knowledgeLevel, setKnowledgeLevel] = useState<"baru" | "paham" | null>(null);
-  
-  // Video Modal State
-  const [showVideoModal, setShowVideoModal] = useState<boolean>(false);
 
   return (
     <BijakShell>
@@ -269,7 +242,7 @@ export default function Pemilu101Page() {
                     onClick={() => setActiveTab("simulasi")}
                     className="inline-flex items-center gap-2 rounded-full bg-brand-800 px-6 py-3 text-sm font-bold text-cream shadow-md transition hover:bg-brand-700 hover:scale-105"
                   >
-                    <span>Cobain ah!</span>
+                    <span>Cobain Simulasi Pemilu</span>
                     <IconArrowRight className="h-4 w-4" />
                   </button>
                 </div>
@@ -334,7 +307,7 @@ export default function Pemilu101Page() {
 
                       <div className="md:col-span-4">
                         <ImagePlaceholder
-                          src=""
+                          src="/images/assets/cek_dpt.png"
                           alt="Cek DPT Online"
                           label="Gambar Step 1: Cek DPT"
                           aspectRatio="aspect-[4/3]"
@@ -366,25 +339,25 @@ export default function Pemilu101Page() {
                         <div className="grid gap-2.5 sm:grid-cols-2">
                           <div className="rounded-xl border border-line bg-white p-3.5">
                             <span className="text-xs font-bold text-brand-800 flex items-center gap-1.5">
-                              🏛️ DPR RI
+                              DPR RI
                             </span>
                             <p className="mt-1 text-xs text-ink-soft">Berdasarkan Kota/Kabupaten</p>
                           </div>
                           <div className="rounded-xl border border-line bg-white p-3.5">
                             <span className="text-xs font-bold text-brand-800 flex items-center gap-1.5">
-                              🏢 DPRD Provinsi
+                              DPRD Provinsi
                             </span>
                             <p className="mt-1 text-xs text-ink-soft">Berdasarkan Kabupaten/Kota</p>
                           </div>
                           <div className="rounded-xl border border-line bg-white p-3.5">
                             <span className="text-xs font-bold text-brand-800 flex items-center gap-1.5">
-                              🏛️ DPRD Kota/Kab
+                              DPRD Kota/Kab
                             </span>
                             <p className="mt-1 text-xs text-ink-soft">Berdasarkan Kecamatan/Kelurahan</p>
                           </div>
                           <div className="rounded-xl border border-line bg-white p-3.5">
                             <span className="text-xs font-bold text-brand-800 flex items-center gap-1.5">
-                              🌐 DPD
+                              DPD
                             </span>
                             <p className="mt-1 text-xs text-ink-soft">Berdasarkan Daerah Provinsi</p>
                           </div>
@@ -405,7 +378,7 @@ export default function Pemilu101Page() {
 
                       <div className="md:col-span-4">
                         <ImagePlaceholder
-                          src=""
+                          src="/images/assets/dapil.png"
                           alt="Cari Lokasi Dapil"
                           label="Gambar Step 2: Cek Dapil"
                           aspectRatio="aspect-[4/3]"
@@ -457,7 +430,7 @@ export default function Pemilu101Page() {
 
                       <div className="md:col-span-4">
                         <ImagePlaceholder
-                          src=""
+                          src="/images/assets/list_caleg.png"
                           alt="Cek List Caleg"
                           label="Gambar Step 3: List Caleg"
                           aspectRatio="aspect-[4/3]"
@@ -498,7 +471,7 @@ export default function Pemilu101Page() {
 
                       <div className="md:col-span-4">
                         <ImagePlaceholder
-                          src=""
+                          src="/images/assets/hari_pemilu.png"
                           alt="Siap Ke TPS"
                           label="Gambar Step 4: Hari Pemilu"
                           aspectRatio="aspect-[4/3]"
@@ -539,7 +512,7 @@ export default function Pemilu101Page() {
 
                       <div className="md:col-span-4">
                         <ImagePlaceholder
-                          src=""
+                          src="/images/assets/merantau.png"
                           alt="FAQ Merantau"
                           label="Gambar Step 5: FAQ Merantau"
                           aspectRatio="aspect-[4/3]"
@@ -558,7 +531,7 @@ export default function Pemilu101Page() {
                 <BijakStepBadge step={3} />
                 <div className="space-y-1 pt-1">
                   <h2 className="font-display text-2xl font-bold text-brand-800 sm:text-3xl">
-                    Terakhir! Pelajari lebih lanjut peran & fungsi lembaga negara 🦅
+                    Terakhir! Pelajari lebih lanjut peran & fungsi lembaga negara
                   </h2>
                   <p className="text-sm text-ink-soft">
                     Karena mengurus negara itu kerja kelompok, kamu juga harus paham siapa aja yang akan terlibat di dalamnya

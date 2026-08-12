@@ -248,25 +248,52 @@ export default function CandidateDetailPage() {
             </div>
           </div>
 
-          <div className="flex gap-1 overflow-x-auto border-t border-line bg-[#F8FAFC] px-2 py-2 no-scrollbar">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`shrink-0 rounded-lg px-3.5 py-2 text-xs font-semibold transition ${
-                  activeTab === tab.id
-                    ? "bg-brand-800 text-cream"
-                    : "text-ink-muted hover:bg-white hover:text-ink"
-                }`}
-              >
-                {tab.label}
-                {typeof tab.count === "number" && (
-                  <span className="ml-1.5 tabular-nums opacity-70">
-                    {tab.count}
+          <div className="flex overflow-x-auto border-t border-line bg-[#F8FAFC] no-scrollbar sm:grid sm:grid-cols-7 sm:overflow-visible">
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab.id;
+              const hasCount = typeof tab.count === "number";
+              const hasItems = hasCount && tab.count > 0;
+
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex min-w-[5.5rem] shrink-0 flex-col items-center justify-center gap-1 border-r border-line/60 px-2 py-2.5 text-center transition last:border-r-0 sm:min-w-0 sm:flex-row sm:gap-1.5 ${
+                    isActive
+                      ? "bg-brand-800 text-cream"
+                      : "text-ink-muted hover:bg-white hover:text-ink"
+                  }`}
+                >
+                  <span className="text-[10px] font-semibold leading-tight sm:text-xs">
+                    {tab.label}
                   </span>
-                )}
-              </button>
-            ))}
+                  {hasCount && (
+                    <span
+                      className={`inline-flex h-2 w-2 shrink-0 rounded-full sm:h-2.5 sm:w-2.5 ${
+                        hasItems
+                          ? isActive
+                            ? "bg-sage ring-2 ring-sage/30"
+                            : "bg-sage"
+                          : isActive
+                            ? "bg-cream/30"
+                            : "bg-line"
+                      }`}
+                      title={
+                        hasItems
+                          ? `${tab.count} item`
+                          : "Belum ada data"
+                      }
+                      aria-label={
+                        hasItems
+                          ? `${tab.count} item di ${tab.label}`
+                          : `Belum ada data di ${tab.label}`
+                      }
+                    />
+                  )}
+                </button>
+              );
+            })}
           </div>
         </StudioCard>
 
