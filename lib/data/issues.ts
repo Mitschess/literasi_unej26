@@ -8,7 +8,6 @@ export interface StrategicIssue {
   id: string;
   slug: string;
   title: string;
-  icon: string;
   summary: string;
   description: string;
   context: string;
@@ -37,7 +36,6 @@ export const strategicIssues: StrategicIssue[] = [
     id: "isu-01",
     slug: "transisi-energi",
     title: "Transisi Energi",
-    icon: "⚡",
     summary: "UU Energi Baru-Terbarukan dan target net-zero Indonesia",
     description:
       "Indonesia berkomitmen mencapai net-zero emissions pada 2060. Namun, kebijakan energi masih mencakup turunan batubara sebagai 'energi baru'. Perdebatan terkait RUU EBET menyoroti perlunya transisi berkeadilan.",
@@ -81,7 +79,6 @@ export const strategicIssues: StrategicIssue[] = [
     id: "isu-02",
     slug: "perlindungan-pekerja",
     title: "Perlindungan Pekerja Informal",
-    icon: "👷",
     summary: "UU Ciptaker belum mengakomodasi pekerja informal",
     description:
       "Sekitar 60% pekerja Indonesia berada di sektor informal tanpa perlindungan jaminan sosial yang memadai. UU Cipta Kerja dikritik karena belum memberikan payung hukum yang cukup untuk kelompok ini.",
@@ -125,7 +122,6 @@ export const strategicIssues: StrategicIssue[] = [
     id: "isu-03",
     slug: "kebebasan-berpendapat",
     title: "Kebebasan Berpendapat",
-    icon: "📢",
     summary: "Revisi UU ITE untuk menghilangkan pasal karet",
     description:
       "Kebebasan berpendapat di Indonesia masih dibatasi oleh pasal-pasal 'karet' dalam UU ITE dan KUHP baru. Banyak aktivis, jurnalis, dan warga biasa yang menjadi korban kriminalisasi karena mengkritik pejabat.",
@@ -169,7 +165,6 @@ export const strategicIssues: StrategicIssue[] = [
     id: "isu-04",
     slug: "korupsi",
     title: "Pemberantasan Korupsi",
-    icon: "🔍",
     summary: "Penguatan KPK & penegakan hukum anti-korupsi",
     description:
       "KPK mengalami pelemahan setelah revisi UU KPK 2019. Skor CPI Indonesia stagnan. Perlu ada penguatan institusi anti-korupsi dan pengesahan UU Perampasan Aset.",
@@ -212,7 +207,6 @@ export const strategicIssues: StrategicIssue[] = [
     id: "isu-05",
     slug: "pendidikan-berkualitas",
     title: "Pendidikan Berkualitas",
-    icon: "🎓",
     summary: "Kesejahteraan guru, kurikulum, dan akses pendidikan",
     description:
       "Indonesia mengalokasikan 20% APBN untuk pendidikan, namun kualitas belum merata. Gaji guru masih rendah, dan akses pendidikan di daerah 3T masih terbatas.",
@@ -254,7 +248,6 @@ export const strategicIssues: StrategicIssue[] = [
     id: "isu-06",
     slug: "kesehatan-publik",
     title: "Kesehatan & Stunting",
-    icon: "🏥",
     summary: "Penurunan stunting dan reformasi BPJS Kesehatan",
     description:
       "Angka stunting Indonesia masih tinggi (21.6%). BPJS Kesehatan mengalami defisit dan pelayanan di fasilitas kesehatan belum merata. Perlu intervensi serius dari hulu ke hilir.",
