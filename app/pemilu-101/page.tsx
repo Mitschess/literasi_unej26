@@ -571,7 +571,7 @@ export default function Pemilu101Page() {
                 <BijakCard tint="paper" className="flex h-full flex-col justify-between p-6 transition hover:shadow-md">
                   <div className="space-y-4">
                     <ImagePlaceholder
-                      src="/images/assets/kandidat-legislatif.png"
+                      src="/images/assets/kandidat-kepala-daerah.png"
                       alt="Partai Politik"
                       label="Gambar Artikel: Partai Politik"
                       aspectRatio="aspect-[16/10]"
@@ -600,7 +600,7 @@ export default function Pemilu101Page() {
                 <BijakCard tint="paper" className="flex h-full flex-col justify-between p-6 transition hover:shadow-md">
                   <div className="space-y-4">
                     <ImagePlaceholder
-                      src="/images/assets/kandidat-kepala-daerah.png"
+                      src="/images/assets/kandidat-legislatif.png"
                       alt="Tugas Presiden"
                       label="Gambar Artikel: Tugas Presiden"
                       aspectRatio="aspect-[16/10]"
@@ -629,7 +629,7 @@ export default function Pemilu101Page() {
                 <BijakCard tint="paper" className="flex h-full flex-col justify-between p-6 transition hover:shadow-md">
                   <div className="space-y-4">
                     <ImagePlaceholder
-                      src="/images/assets/profil-kandidat.png"
+                      src="/images/assets/kandidat_perempuan.png"
                       alt="Tugas Legislatif"
                       label="Gambar Artikel: Tugas Legislatif"
                       aspectRatio="aspect-[16/10]"
@@ -655,70 +655,6 @@ export default function Pemilu101Page() {
                 </BijakCard>
               </div>
             </section>
-
-            {/* SECTION 4: CALLOUT & DIRECT LINKS */}
-            <BijakCard tint="navy" className="p-8 text-center space-y-6">
-              <div className="max-w-2xl mx-auto space-y-3">
-                <span className="inline-flex items-center gap-2 rounded-full bg-gold-400/30 px-3.5 py-1 text-xs font-bold text-brand-900">
-                  <IconCalendar /> 14 Februari 2024
-                </span>
-                <h2 className="font-display text-2xl font-bold text-brand-800 sm:text-4xl leading-snug">
-                  Sebagai mayoritas pemilih, kita punya andil yang besar untuk menentukan masa depan negara.
-                </h2>
-                <p className="text-sm text-ink-soft">
-                  Gunakan hak pilihmu secara rasional, objektif, dan berlandaskan rekam jejak.
-                </p>
-              </div>
-
-              {/* 4 Direct Link Cards */}
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 pt-4 text-left">
-                <Link
-                  href="/isu"
-                  className="group rounded-2xl border border-line bg-white p-5 transition hover:border-sage hover:shadow-md"
-                >
-                  <span className="text-2xl">🎯</span>
-                  <h4 className="mt-2 font-display text-sm font-bold text-brand-800 group-hover:text-sage">
-                    Pahami 16 Isu Strategis
-                  </h4>
-                  <p className="mt-1 text-xs text-ink-muted">Pelajari posisi kandidat dalam isu publik</p>
-                </Link>
-
-                <Link
-                  href="/kandidat"
-                  className="group rounded-2xl border border-line bg-white p-5 transition hover:border-sage hover:shadow-md"
-                >
-                  <span className="text-2xl">🏛️</span>
-                  <h4 className="mt-2 font-display text-sm font-bold text-brand-800 group-hover:text-sage">
-                    Pelajari Profil Partai
-                  </h4>
-                  <p className="mt-1 text-xs text-ink-muted">Cek rekam jejak dan perolehan suara partai</p>
-                </Link>
-
-                <Link
-                  href="/kandidat"
-                  className="group rounded-2xl border border-line bg-white p-5 transition hover:border-sage hover:shadow-md"
-                >
-                  <span className="text-2xl">👤</span>
-                  <h4 className="mt-2 font-display text-sm font-bold text-brand-800 group-hover:text-sage">
-                    Pelajari Profil Kandidat
-                  </h4>
-                  <p className="mt-1 text-xs text-ink-muted">Ketahui riwayat hidup dan gagasan calon</p>
-                </Link>
-
-                <button
-                  onClick={() => setShowVideoModal(true)}
-                  className="group text-left rounded-2xl border border-line bg-white p-5 transition hover:border-sage hover:shadow-md"
-                >
-                  <span className="text-2xl">📺</span>
-                  <h4 className="mt-2 font-display text-sm font-bold text-brand-800 group-hover:text-sage flex items-center justify-between">
-                    <span>Jadi, ngapain kita Bijak Memilih?</span>
-                  </h4>
-                  <p className="mt-1 text-xs text-sage font-bold flex items-center gap-1">
-                    <IconPlayCircle /> Tonton Video
-                  </p>
-                </button>
-              </div>
-            </BijakCard>
           </div>
         )}
 
@@ -855,34 +791,6 @@ export default function Pemilu101Page() {
           </FadeContent>
         )}
       </div>
-
-      {/* VIDEO MODAL FOR "JADI NGAPAIN KITA BIJAK MEMILIH?" */}
-      {showVideoModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
-          <div className="relative w-full max-w-3xl overflow-hidden rounded-3xl bg-white shadow-2xl">
-            <div className="flex items-center justify-between border-b border-line px-6 py-4">
-              <h3 className="font-display text-lg font-bold text-brand-800">
-                Jadi, ngapain kita Bijak Memilih?
-              </h3>
-              <button
-                onClick={() => setShowVideoModal(false)}
-                className="rounded-full p-1.5 text-ink-muted hover:bg-brand-50 hover:text-ink transition"
-              >
-                <IconX />
-              </button>
-            </div>
-            <div className="relative aspect-video w-full bg-black">
-              <iframe
-                src="https://www.youtube.com/embed/ZCP_ntUkYH4"
-                title="Jadi, ngapain kita Bijak Memilih?"
-                className="h-full w-full border-0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>
-          </div>
-        </div>
-      )}
     </BijakShell>
   );
 }
