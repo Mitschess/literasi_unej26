@@ -13,7 +13,10 @@ export const Navbar: React.FC = () => {
   const navItems = [
     { label: "Beranda", href: "/" },
     { label: "Cari Kandidat", href: "/kandidat" },
+    { label: "Cari Partai", href: "/partai" },
     { label: "Bandingkan", href: "/bandingkan" },
+    { label: "Isu Strategis", href: "/isu" },
+    { label: "Panduan Pemilu", href: "/pemilu-101" },
     { label: "Literasi", href: "/literasi" },
   ];
 

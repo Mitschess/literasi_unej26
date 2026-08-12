@@ -104,56 +104,24 @@ function CandidateComparisonContent() {
           <span>/</span>
           <span className="font-semibold text-ink">Perbandingan Kandidat</span>
         </div>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-1">
             <h1 className="text-3xl font-black text-ink">
               {isComparing ? "Tabel Perbandingan Side-by-Side" : "Pilih Kandidat untuk Dibandingkan"}
             </h1>
-            <p className="text-xs sm:text-sm text-ink-soft mt-1">
+            <p className="text-xs sm:text-sm text-ink-soft max-w-2xl">
               {isComparing
                 ? "Bandingkan profil, program, rekam jejak terverifikasi, dan realisasi janji politik secara transparan."
                 : "Cari dan pilih 2 hingga 4 kandidat politik untuk melihat perbandingan berdampingan."}
             </p>
           </div>
-          {isComparing ? (
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                onClick={() => setIsComparing(false)}
-                className="px-4 py-2 rounded-xl bg-mist border border-line text-ink-soft hover:text-ink font-bold text-xs shadow-sm flex items-center gap-1.5"
-              >
-                <span>🔍 Cari / Ubah Kandidat</span>
-              </button>
-              {selectedIds.length < 4 && (
-                <button
-                  onClick={addCandidateSlot}
-                  className="px-4 py-2 rounded-xl bg-brand-800 hover:bg-brand-700 text-white font-bold text-xs shadow-sm flex items-center gap-1.5"
-                >
-                  <span>+ Tambah Slot</span>
-                </button>
-              )}
-            </div>
-          ) : (
-            <button
-              onClick={handleStartComparison}
-              disabled={selectedIds.length < 2}
-              className="px-6 py-2.5 rounded-xl bg-brand-800 hover:bg-brand-700 disabled:opacity-50 text-white font-bold text-xs sm:text-sm shadow-md transition-all shrink-0"
-            >
-              Tampilkan Perbandingan ({selectedIds.length}) →
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* NEUTRALITY DISCLAIMER BANNER (SRS §10.4) */}
-      <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 flex items-start gap-3 text-xs text-amber-800">
-        <span className="text-lg">⚖️</span>
-        <div>
-          <strong className="block font-bold mb-0.5">
-            Prinsip Netralitas Perbandingan
-          </strong>
-          POLITRACK menyajikan perbandingan indikator faktual dari sumber publik
-          tanpa skor agregat atau kesimpulan otomatis ("Kandidat A lebih baik").
-          Keputusan dan penilaian akhir berada sepenuhnya di tangan pemilih.
+          <div className="w-24 h-24 sm:w-28 sm:h-28 shrink-0 self-center">
+            <img
+              src="/images/assets/perbandingan.png"
+              alt="Perbandingan Kandidat"
+              className="w-full h-full object-contain drop-shadow-md"
+            />
+          </div>
         </div>
       </div>
 
@@ -161,27 +129,50 @@ function CandidateComparisonContent() {
       {!isComparing ? (
         <div className="space-y-6">
           {/* SEARCH BAR & FILTER TOOLBAR */}
-          <div className="p-4 bg-white border border-line rounded-2xl shadow-sm flex flex-col sm:flex-row items-center gap-3">
-            <div className="relative flex-1 w-full">
-              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-muted text-sm">🔍</span>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="group relative flex-1 w-full flex items-center rounded-lg bg-white/80 backdrop-blur-xl border border-line/80 shadow-soft transition-all outline-none focus:outline-none focus-visible:outline-none">
+              <svg
+                className="w-5 h-5 text-ink-muted absolute left-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari kandidat berdasarkan nama, partai, atau dapil..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-cream border border-line text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sage"
+                placeholder="Cari nama, partai, atau dapil…"
+                className="w-full bg-transparent pl-14 pr-28 py-4 text-sm sm:text-base text-ink placeholder:text-ink-muted/70 border-none outline-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0"
               />
-              {searchQuery && (
+              {searchQuery ? (
                 <button
+                  type="button"
                   onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-ink-muted hover:text-ink"
+                  className="absolute right-2 px-4 py-2.5 rounded-md bg-brand-700 text-cream text-xs sm:text-sm font-semibold hover:bg-brand-600 transition-colors focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0"
                 >
-                  ✕ Clear
+                  Reset
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="absolute right-2 px-5 py-2.5 rounded-md bg-brand-700 text-cream text-xs sm:text-sm font-semibold hover:bg-brand-600 transition-colors focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0"
+                >
+                  Cari
                 </button>
               )}
             </div>
-            <div className="text-xs font-bold text-ink-soft shrink-0">
-              Terpilih: <span className="text-brand-800">{selectedIds.length}</span> / 4 Kandidat
+            <div className="flex items-center gap-2 px-4 py-3.5 rounded-lg bg-white/80 backdrop-blur-xl border border-line/80 shadow-soft text-xs sm:text-sm font-bold text-ink-soft shrink-0">
+              <span>Terpilih:</span>
+              <span className="rounded-md bg-brand-800 px-2 py-0.5 text-cream font-extrabold">
+                {selectedIds.length} / 4
+              </span>
             </div>
           </div>
 

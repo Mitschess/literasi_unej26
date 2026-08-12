@@ -61,6 +61,95 @@ export default function Home() {
           </div>
         </section>
 
+        {/* BIJAK MEMILIH INTEGRATED FEATURES SECTION */}
+        <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+          <div className="p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-cream via-white to-brand-50/30 border border-line shadow-sm space-y-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
+              <div className="space-y-2">
+                <span className="px-3 py-1 rounded-full bg-brand-800 text-white text-[11px] font-extrabold uppercase tracking-wider">
+                  Fitur Interaktif · Bijak Memilih
+                </span>
+                <h2 className="font-display text-3xl sm:text-4xl text-ink">
+                  Kenali & Tentukan Pilihanmu Lebih Bijak
+                </h2>
+                <p className="text-xs sm:text-sm text-ink-soft max-w-2xl leading-relaxed">
+                  Pelajari isu strategis nasional dan rasakan simulasi hari pemilu secara transparan dan netral.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* CARD 1: ISU STRATEGIS */}
+              <div className="p-6 rounded-2xl bg-white border border-line shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between space-y-4 group">
+                <div className="space-y-3">
+                  <div className="w-16 h-16 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center p-2">
+                    <img src="/images/assets/program-visi-misi.png" alt="Isu Strategis" className="w-full h-full object-contain" />
+                  </div>
+                  <h3 className="font-extrabold text-xl text-ink group-hover:text-brand-800 transition-colors">
+                    Isu Strategis Nasional
+                  </h3>
+                  <p className="text-xs text-ink-soft leading-relaxed">
+                    Pahami perdebatan krisis iklim, kebebasan berpendapat, pekerja informal, korupsi, dan regulasi terkait.
+                  </p>
+                </div>
+                <Link
+                  href="/isu"
+                  className="w-full py-2.5 rounded-xl bg-brand-800 hover:bg-brand-700 text-white font-extrabold text-xs text-center block transition-all shadow-sm"
+                >
+                  Jelajahi Isu →
+                </Link>
+              </div>
+
+              {/* CARD 2: PEMILU 101 */}
+              <div className="p-6 rounded-2xl bg-white border border-line shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between space-y-4 group">
+                <div className="space-y-3">
+                  <div className="w-16 h-16 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center p-2">
+                    <img src="/images/assets/kandidat-legislatif.png" alt="Panduan Pemilu" className="w-full h-full object-contain" />
+                  </div>
+                  <h3 className="font-extrabold text-xl text-ink group-hover:text-brand-800 transition-colors">
+                    Panduan Pemilu & Pause Dulu
+                  </h3>
+                  <p className="text-xs text-ink-soft leading-relaxed">
+                    Crash course pemilu, simulasi mencoblos di TPS, serta 5 langkah menjaga diri dari hoax dan misinformasi.
+                  </p>
+                </div>
+                <Link
+                  href="/pemilu-101"
+                  className="w-full py-2.5 rounded-xl bg-white border border-line hover:bg-mist/50 text-ink font-extrabold text-xs text-center block transition-all"
+                >
+                  Buka Panduan →
+                </Link>
+              </div>
+
+              {/* CARD 3: CARI PARTAI */}
+              <div className="p-6 rounded-2xl bg-white border border-line shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between space-y-4 group">
+                <div className="space-y-3">
+                  <div className="w-16 h-16 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center p-2 relative overflow-hidden">
+                    <div className="grid grid-cols-2 gap-0.5 w-full h-full p-0.5">
+                      <img src="/images/parpol/pdi.png" alt="PDI-P" className="w-full h-full object-contain" />
+                      <img src="/images/parpol/gerindra.svg" alt="Gerindra" className="w-full h-full object-contain" />
+                      <img src="/images/parpol/PKB.png" alt="PKB" className="w-full h-full object-contain" />
+                      <img src="/images/parpol/PAN.png" alt="PAN" className="w-full h-full object-contain" />
+                    </div>
+                  </div>
+                  <h3 className="font-extrabold text-xl text-ink group-hover:text-brand-800 transition-colors">
+                    Cari & Bandingkan Partai
+                  </h3>
+                  <p className="text-xs text-ink-soft leading-relaxed">
+                    Jelajahi visi-misi, rekam jejak, dan perolehan suara partai-partai politik Indonesia secara transparan.
+                  </p>
+                </div>
+                <Link
+                  href="/partai"
+                  className="w-full py-2.5 rounded-xl bg-white border border-line hover:bg-sage/10 hover:border-sage/40 text-ink font-extrabold text-xs text-center block transition-all"
+                >
+                  Jelajahi Partai →
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <PipelineSection />
 
         <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full space-y-10">

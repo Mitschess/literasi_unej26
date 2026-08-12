@@ -134,6 +134,26 @@ export interface Constituency {
   electionId: string;
 }
 
+export interface VerifiedNews {
+  id: string;
+  title: string;
+  media: string;
+  url: string;
+  publishedAt: string;
+  snippet: string;
+  verificationStatus: VerificationStatus;
+}
+
+export interface IssueStance {
+  id: string;
+  issueId: string; // matches StrategicIssue id e.g. "isu-01" or slug "transisi-energi"
+  issueTitle: string;
+  category: string;
+  stance: string; // e.g. "Pro-Transisi Berkeadilan", "Hilirisasi Komoditas", "Evaluasi Total"
+  description: string;
+  verifiedNews: VerifiedNews[];
+}
+
 export interface Candidate {
   id: string;
   name: string;
@@ -153,6 +173,7 @@ export interface Candidate {
   promises: Promise[];
   timeline: TimelineEvent[];
   performanceMetrics: PerformanceMetric[];
+  issueStances?: IssueStance[];
   updatedAt: string;
 }
 

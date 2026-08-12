@@ -3,6 +3,7 @@ import { Source_Sans_3, Source_Serif_4, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { Providers } from "./providers";
 
 const sourceSans = Source_Sans_3({
@@ -56,6 +57,7 @@ export default function RootLayout({
           <Navbar />
           <main className="flex-1 w-full">{children}</main>
           <Footer />
+          <ScrollToTop />
         </Providers>
       </body>
     </html>

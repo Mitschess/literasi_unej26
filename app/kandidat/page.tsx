@@ -116,44 +116,60 @@ function CandidateListContent() {
 
   return (
     <div className="space-y-8">
-      {/* HEADER & BREADCRUMB */}
-      <div className="space-y-2">
+      <div className="space-y-3">
         <div className="flex items-center gap-2 text-xs text-ink-muted">
-          <Link href="/" className="hover:underline">
+          <Link href="/" className="hover:text-ink transition-colors">
             Beranda
           </Link>
-          <span>/</span>
-          <span className="font-semibold text-ink">Daftar Kandidat</span>
+          <span className="opacity-40">/</span>
+          <span className="font-semibold text-ink">Kandidat</span>
         </div>
-        <h1 className="text-3xl font-black text-ink">
-          Eksplorasi Rekam Jejak Kandidat
-        </h1>
-        <p className="text-xs sm:text-sm text-ink-soft max-w-3xl">
-          Jelajahi kandidat lewat peta Indonesia, pencarian, atau filter partai
-          dan wilayah untuk memeriksa profil serta rekam jejak mereka secara
-          transparan.
-        </p>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2">
+              <span className="h-px w-8 bg-sage" />
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-sage">
+                Direktori publik
+              </p>
+            </div>
+            <h1 className="font-display text-3xl sm:text-4xl tracking-tight text-brand-800">
+              Rekam Jejak Kandidat
+            </h1>
+            <p className="text-sm text-ink-muted max-w-xl leading-relaxed">
+              Jelajahi kandidat lewat peta, pencarian, atau filter partai dan wilayah
+              untuk memeriksa profil serta rekam jejak secara transparan.
+            </p>
+          </div>
+          <div className="w-24 h-24 sm:w-32 sm:h-32 shrink-0 self-center">
+            <img
+              src="/images/assets/verifikator.png"
+              alt="Cari Rekam Jejak Kandidat"
+              className="w-full h-full object-contain drop-shadow-md"
+            />
+          </div>
+        </div>
       </div>
 
-      {/* INTERACTIVE MAP */}
-      <div className="p-5 rounded-2xl bg-white border border-line shadow-sm space-y-4">
+      <div className="p-5 rounded-2xl bg-white border border-line space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
           <div className="space-y-1">
-            <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sage">
-              Eksplorasi Wilayah
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sage">
+              Eksplorasi wilayah
             </p>
-            <h2 className="text-xl font-black text-ink">Peta Kandidat Indonesia</h2>
+            <h2 className="font-display text-xl text-brand-800">
+              Peta kandidat Indonesia
+            </h2>
             <p className="text-xs text-ink-muted max-w-2xl">
-              Klik provinsi di peta untuk memfilter daftar kandidat. Provinsi
-              berwarna hijau memiliki data kandidat.
+              Klik provinsi untuk memfilter daftar. Provinsi berwarna menandai
+              wilayah yang punya data kandidat.
             </p>
           </div>
           {selectedProvince !== "all" && (
             <button
               onClick={() => handleProvinceSelect(null)}
-              className="shrink-0 px-3 py-2 rounded-xl text-xs font-bold text-brand-700 bg-brand-50 hover:bg-brand-100 border border-line transition-colors"
+              className="shrink-0 px-3 py-2 rounded-lg text-xs font-semibold text-brand-700 bg-[#F5F7FA] border border-line transition-colors hover:border-sage/40"
             >
-              Tampilkan Semua Provinsi
+              Tampilkan semua
             </button>
           )}
         </div>
@@ -273,18 +289,18 @@ function CandidateListContent() {
             selectedParty !== "all" ||
             selectedProvince !== "all" ||
             selectedElectionType !== "all") && (
-            <button
-              onClick={() => {
-                setSearchQuery("");
-                setSelectedParty("all");
-                handleProvinceSelect(null);
-                setSelectedElectionType("all");
-              }}
-              className="text-brand-700 font-bold hover:underline"
-            >
-              Reset Filter
-            </button>
-          )}
+              <button
+                onClick={() => {
+                  setSearchQuery("");
+                  setSelectedParty("all");
+                  handleProvinceSelect(null);
+                  setSelectedElectionType("all");
+                }}
+                className="text-brand-700 font-bold hover:underline"
+              >
+                Reset Filter
+              </button>
+            )}
         </div>
       </div>
 
