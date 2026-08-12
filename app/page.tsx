@@ -94,7 +94,7 @@ export default function Home() {
                 </div>
                 <Link
                   href="/isu"
-                  className="w-full py-2.5 rounded-xl bg-brand-800 hover:bg-brand-700 text-white font-extrabold text-xs text-center block transition-all shadow-sm"
+                  className="w-full py-2.5 rounded-xl bg-cream border border-line text-ink font-extrabold text-xs text-center block transition-all hover:bg-sage hover:border-sage hover:text-white"
                 >
                   Jelajahi Isu →
                 </Link>
@@ -115,7 +115,7 @@ export default function Home() {
                 </div>
                 <Link
                   href="/pemilu-101"
-                  className="w-full py-2.5 rounded-xl bg-white border border-line hover:bg-mist/50 text-ink font-extrabold text-xs text-center block transition-all"
+                  className="w-full py-2.5 rounded-xl bg-cream border border-line text-ink font-extrabold text-xs text-center block transition-all hover:bg-sage hover:border-sage hover:text-white"
                 >
                   Buka Panduan →
                 </Link>
@@ -124,13 +124,12 @@ export default function Home() {
               {/* CARD 3: CARI PARTAI */}
               <div className="p-6 rounded-2xl bg-white border border-line shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between space-y-4 group">
                 <div className="space-y-3">
-                  <div className="w-16 h-16 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center p-2 relative overflow-hidden">
-                    <div className="grid grid-cols-2 gap-0.5 w-full h-full p-0.5">
-                      <img src="/images/parpol/pdi.png" alt="PDI-P" className="w-full h-full object-contain" />
-                      <img src="/images/parpol/gerindra.svg" alt="Gerindra" className="w-full h-full object-contain" />
-                      <img src="/images/parpol/PKB.png" alt="PKB" className="w-full h-full object-contain" />
-                      <img src="/images/parpol/PAN.png" alt="PAN" className="w-full h-full object-contain" />
-                    </div>
+                  <div className="w-16 h-16 rounded-2xl bg-white border border-line flex items-center justify-center p-1 overflow-hidden">
+                    <img
+                      src="/images/parpol/kumpulan_partai.png"
+                      alt="Logo partai politik Indonesia"
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                   <h3 className="font-extrabold text-xl text-ink group-hover:text-brand-800 transition-colors">
                     Cari & Bandingkan Partai
@@ -141,7 +140,7 @@ export default function Home() {
                 </div>
                 <Link
                   href="/partai"
-                  className="w-full py-2.5 rounded-xl bg-white border border-line hover:bg-sage/10 hover:border-sage/40 text-ink font-extrabold text-xs text-center block transition-all"
+                  className="w-full py-2.5 rounded-xl bg-cream border border-line text-ink font-extrabold text-xs text-center block transition-all hover:bg-sage hover:border-sage hover:text-white"
                 >
                   Jelajahi Partai →
                 </Link>

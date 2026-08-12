@@ -177,10 +177,6 @@ export default function Pemilu101Page() {
                   }`}
                 >
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-3xl">😫</span>
-                      <BijakLabel variant="teal">Level 01: Pemula</BijakLabel>
-                    </div>
 
                     <h3 className="font-display text-xl font-bold text-brand-800">
                       Masih belum tahu apa-apa
@@ -191,12 +187,13 @@ export default function Pemilu101Page() {
 
                     {/* Image Slot for Card A */}
                     <ImagePlaceholder
-                      src=""
+                      src="/images/assets/bingung.png"
                       alt="Gambar Belum Paham Pemilu"
                       label="Gambar Slot: Masih Pemula"
                       aspectRatio="h-40"
                       className="mt-4"
                     />
+
                   </div>
 
                   <div className="mt-6 pt-4 border-t border-line/60 flex items-center justify-between">
@@ -227,10 +224,6 @@ export default function Pemilu101Page() {
                   }`}
                 >
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-3xl">😎</span>
-                      <BijakLabel>Level 02: Paham</BijakLabel>
-                    </div>
 
                     <h3 className="font-display text-xl font-bold text-brand-800">
                       Udah lumayan paham!
@@ -238,7 +231,6 @@ export default function Pemilu101Page() {
                     <p className="text-sm text-ink-soft leading-relaxed">
                       Biar tambah naik level, nih pelajari gimana caranya kamu bisa terhindar dari Hoax & Misinformasi menjelang Pemilu!
                     </p>
-
                     {/* Image Slot for Card B */}
                     <ImagePlaceholder
                       src=""
@@ -247,6 +239,7 @@ export default function Pemilu101Page() {
                       aspectRatio="h-40"
                       className="mt-4"
                     />
+
                   </div>
 
                   <div className="mt-6 pt-4 border-t border-line/60 flex items-center justify-between">

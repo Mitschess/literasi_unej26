@@ -36,3 +36,20 @@ export function categoryIcon(c: PartyTrackRecord["category"]) {
   if (c === "kebijakan") return "📋";
   return "📊";
 }
+
+export function categoryLabel(c: PartyTrackRecord["category"]) {
+  if (c === "prestasi") return "Prestasi";
+  if (c === "kontroversi") return "Kontroversi";
+  if (c === "kebijakan") return "Kebijakan";
+  return "Pemilu";
+}
+
+export function partyCardGradient(party: Party) {
+  const secondary = party.secondaryColor ?? party.color;
+  return `linear-gradient(225deg, ${party.color}28 0%, ${secondary}14 30%, #ffffff 68%)`;
+}
+
+export function partyHeaderGradient(party: Party) {
+  const secondary = party.secondaryColor ?? party.color;
+  return `linear-gradient(135deg, ${party.color}18 0%, ${secondary}0a 45%, #ffffff 100%)`;
+}

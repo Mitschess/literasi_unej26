@@ -1,12 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import Link from "next/link";
 import { Party } from "@/lib/data/parties";
-import { spectrumLabel } from "@/lib/party/display";
+import { partyCardGradient } from "@/lib/party/display";
 
 const actionBtnClass =
-  "flex-1 py-2 rounded-xl font-semibold text-xs transition-all bg-cream border border-line text-ink-soft hover:bg-sage hover:border-sage hover:text-white";
+  "flex-1 py-2 rounded-xl font-semibold text-xs transition-all bg-white/80 border border-line text-ink-soft hover:bg-sage hover:border-sage hover:text-white";
 
 interface PartyCardProps {
   party: Party;
@@ -15,74 +15,99 @@ interface PartyCardProps {
   compareMode: boolean;
 }
 
+function PartyLogo({
+  party,
+  size = "md",
+}: {
+  party: Party;
+  size?: "sm" | "md";
+}) {
+  const dim = size === "sm" ? "h-12 w-12" : "h-14 w-14";
+
+  return (
+    <div className={`${dim} flex shrink-0 items-center justify-center`}>
+      <img
+        src={party.logoUrl}
+        alt={`Logo ${party.shortName}`}
+        className="h-full w-full object-contain"
+        onError={(e) => {
+          const t = e.target as HTMLImageElement;
+          t.style.display = "none";
+          const parent = t.parentElement;
+          if (parent) {
+            parent.innerHTML = `<span style="color:${party.color};font-weight:800;font-size:11px;letter-spacing:-0.02em">${party.shortName}</span>`;
+          }
+        }}
+      />
+    </div>
+  );
+}
+
 export function PartyCard({
   party,
   isSelected,
   onToggleSelect,
   compareMode,
 }: PartyCardProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
   const latestResult =
     party.electionResults?.[party.electionResults.length - 1];
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = cardRef.current;
+    if (!el) return;
+
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -5;
+    const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 5;
+
+    el.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(0)`;
+  };
+
+  const handleMouseLeave = () => {
+    const el = cardRef.current;
+    if (!el) return;
+    el.style.transform = "perspective(900px) rotateX(0deg) rotateY(0deg) translateZ(0)";
+  };
+
   return (
     <div
-      className={`relative mx-auto flex w-full max-w-[260px] flex-col overflow-hidden rounded-[22px] border bg-white transition-all duration-300 ${
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className={`relative mx-auto flex w-full max-w-[260px] flex-col overflow-hidden rounded-[22px] border transition-[transform,border-color] duration-300 ease-out will-change-transform ${
         isSelected
-          ? "border-sage/50 ring-2 ring-sage ring-offset-2 ring-offset-cream"
-          : "border-line hover:border-sage/25 hover:shadow-[0_10px_32px_rgba(20,32,51,0.07)]"
+          ? "border-sage ring-2 ring-sage ring-offset-2 ring-offset-cream"
+          : "border-line hover:border-sage/40"
       }`}
+      style={{
+        transformStyle: "preserve-3d",
+        background: partyCardGradient(party),
+      }}
     >
-      <Link
-        href={`/partai/${party.slug}`}
-        className="group block border-b border-line/70"
-      >
-        <div
-          className="relative flex h-[108px] items-center justify-center px-5"
-          style={{
-            background: `linear-gradient(165deg, ${party.color}12 0%, ${party.color}04 55%, transparent 100%)`,
-          }}
-        >
-          <div className="flex h-[72px] w-[72px] items-center justify-center rounded-2xl border border-line/80 bg-white p-2.5 shadow-[0_4px_14px_rgba(20,32,51,0.06)] transition-transform duration-300 group-hover:scale-[1.04]">
-            <img
-              src={party.logoUrl}
-              alt={`Logo ${party.shortName}`}
-              className="h-full w-full object-contain"
-              onError={(e) => {
-                const t = e.target as HTMLImageElement;
-                t.style.display = "none";
-                const parent = t.parentElement;
-                if (parent) {
-                  parent.style.backgroundColor = party.color + "18";
-                  parent.innerHTML = `<span style="color:${party.color};font-weight:800;font-size:13px;letter-spacing:-0.02em">${party.shortName}</span>`;
-                }
-              }}
-            />
-          </div>
-        </div>
-      </Link>
-
       <div className="flex flex-1 flex-col gap-3 p-4">
-        <div className="space-y-1">
-          <h3 className="font-display text-lg leading-tight text-brand-800">
-            {party.shortName}
-          </h3>
-          <p className="line-clamp-2 text-[11px] leading-relaxed text-ink-muted">
-            {party.name}
-          </p>
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1 space-y-1">
+            <h3 className="font-display text-lg leading-tight text-brand-800">
+              {party.shortName}
+            </h3>
+            <p className="line-clamp-2 text-[11px] leading-relaxed text-ink-muted">
+              {party.name}
+            </p>
+          </div>
+          <PartyLogo party={party} />
         </div>
 
         <div className="space-y-0.5 text-[11px] text-ink-soft">
           <p className="font-medium text-ink">{party.chairman}</p>
-          <p className="text-ink-muted">
-            Est. {party.founded}
-            <span className="mx-1.5 text-line">·</span>
-            {spectrumLabel[party.spectrum]}
-          </p>
+          <p className="text-ink-muted">Est. {party.founded}</p>
         </div>
 
         {latestResult && (
-          <div className="mt-auto flex items-end gap-4 border-t border-line/70 pt-3">
-            <div>
+          <div className="mt-auto flex items-end justify-center gap-4 border-t border-line/70 pt-3">
+            <div className="text-center">
               <p className="font-display text-xl tabular-nums leading-none text-brand-800">
                 {party.dprSeats2024}
               </p>
@@ -91,7 +116,7 @@ export function PartyCard({
               </p>
             </div>
             <div className="mb-px h-8 w-px bg-line/80" />
-            <div>
+            <div className="text-center">
               <p className="font-display text-xl tabular-nums leading-none text-brand-800">
                 {latestResult.percentage.toFixed(1)}%
               </p>
@@ -104,7 +129,10 @@ export function PartyCard({
       </div>
 
       <div className="flex gap-2 px-4 pb-4">
-        <Link href={`/partai/${party.slug}`} className={`${actionBtnClass} text-center`}>
+        <Link
+          href={`/partai/${party.slug}`}
+          className={`${actionBtnClass} text-center`}
+        >
           Jelajahi
         </Link>
         {compareMode && (
@@ -112,7 +140,7 @@ export function PartyCard({
             onClick={onToggleSelect}
             className={`flex-1 rounded-xl py-2 text-xs font-semibold transition-all ${
               isSelected
-                ? "border border-transparent bg-brand-800 text-cream shadow-sm"
+                ? "border border-transparent bg-brand-800 text-cream"
                 : actionBtnClass
             }`}
           >

@@ -4,16 +4,17 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getPartyBySlug } from "@/lib/data/parties";
+import FadeContent from "@/components/FadeContent";
 import {
   StudioShell,
   StudioCrumb,
   StudioCard,
 } from "@/components/literacy/StudioChrome";
 import {
-  spectrumLabel,
   sentimentBadge,
   sentimentLabel,
-  categoryIcon,
+  categoryLabel,
+  partyHeaderGradient,
 } from "@/lib/party/display";
 
 type TabId = "overview" | "visi-misi" | "rekam-jejak" | "pemilu";
@@ -45,11 +46,14 @@ export default function PartyDetailPage() {
     );
   }
 
-  const tabs: { id: TabId; label: string }[] = [
+  const latestResult =
+    party.electionResults?.[party.electionResults.length - 1];
+
+  const tabs: { id: TabId; label: string; count?: number }[] = [
     { id: "overview", label: "Profil" },
     { id: "visi-misi", label: "Visi & Misi" },
-    { id: "rekam-jejak", label: "Rekam Jejak" },
-    { id: "pemilu", label: "Pemilu" },
+    { id: "rekam-jejak", label: "Rekam Jejak", count: party.trackRecords.length },
+    { id: "pemilu", label: "Pemilu", count: party.electionResults.length },
   ];
 
   return (
@@ -65,115 +69,138 @@ export default function PartyDetailPage() {
 
         <StudioCard className="overflow-hidden">
           <div
-            className="px-6 pt-6 pb-5"
-            style={{
-              background: `linear-gradient(135deg, ${party.color} 0%, ${party.secondaryColor ?? party.color}cc 100%)`,
-            }}
+            className="p-5 sm:p-7"
+            style={{ background: partyHeaderGradient(party) }}
           >
-            <div className="flex items-start gap-4">
-              <div className="w-20 h-20 rounded-2xl bg-white/95 flex items-center justify-center p-2 shadow-lg shrink-0">
+            <div className="flex gap-5">
+              <div className="min-w-0 flex-1 space-y-5">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span
+                    className="rounded-md px-2.5 py-1 text-[11px] font-bold text-white"
+                    style={{ backgroundColor: party.color }}
+                  >
+                    {party.shortName}
+                  </span>
+                  <span className="rounded-md bg-white/80 px-2.5 py-1 text-[11px] font-semibold text-ink-soft">
+                    Est. {party.founded}
+                  </span>
+                </div>
+
+                <div>
+                  <h1 className="font-display text-3xl tracking-tight text-brand-800 sm:text-4xl">
+                    {party.name}
+                  </h1>
+                  <p className="mt-1.5 text-sm text-ink-muted">
+                    Ketua Umum: {party.chairman}
+                  </p>
+                </div>
+
+                <div className="grid max-w-md grid-cols-3 gap-3">
+                  {[
+                    { label: "Kursi DPR 2024", value: String(party.dprSeats2024) },
+                    {
+                      label: "Suara 2024",
+                      value: latestResult
+                        ? `${latestResult.percentage.toFixed(1)}%`
+                        : "—",
+                    },
+                    { label: "Anggota", value: party.memberCount },
+                  ].map((stat) => (
+                    <div
+                      key={stat.label}
+                      className="rounded-xl border border-line/80 bg-white/80 px-3 py-2.5 backdrop-blur-sm"
+                    >
+                      <p className="font-display text-lg tabular-nums text-brand-800">
+                        {stat.value}
+                      </p>
+                      <p className="mt-0.5 text-[10px] leading-snug text-ink-muted">
+                        {stat.label}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="hidden shrink-0 sm:flex sm:items-center sm:pr-4">
                 <img
                   src={party.logoUrl}
                   alt={party.name}
-                  className="w-full h-full object-contain"
+                  className="h-24 w-24 object-contain lg:h-32 lg:w-32"
                   onError={(e) => {
                     const t = e.target as HTMLImageElement;
                     t.style.display = "none";
-                    const parent = t.parentElement;
-                    if (parent)
-                      parent.innerHTML = `<span style="color:${party.color};font-weight:900;font-size:16px">${party.shortName}</span>`;
                   }}
                 />
-              </div>
-              <div className="flex-1 min-w-0 text-white">
-                <div className="text-xs font-bold uppercase tracking-wider text-white/70 mb-1">
-                  Partai Politik Indonesia
-                </div>
-                <h1 className="font-display text-2xl sm:text-3xl tracking-tight leading-tight">
-                  {party.name}
-                </h1>
-                <div className="flex items-center gap-3 mt-2 flex-wrap">
-                  <span className="bg-white/20 text-white text-xs font-bold px-2.5 py-1 rounded-full">
-                    {party.shortName}
-                  </span>
-                  <span className="text-white/80 text-xs">
-                    Ketua: {party.chairman}
-                  </span>
-                  <span className="text-white/80 text-xs">
-                    Est. {party.founded}
-                  </span>
-                  <span
-                    className="px-2 py-0.5 rounded text-[10px] font-bold border bg-white/10"
-                    style={{
-                      color: "#fff",
-                      borderColor: "rgba(255,255,255,0.3)",
-                    }}
-                  >
-                    {spectrumLabel[party.spectrum]}
-                  </span>
-                </div>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-1 px-6 pt-4 border-b border-line bg-white">
+          <div className="flex gap-1 overflow-x-auto border-t border-line bg-[#F8FAFC] px-2 py-2 no-scrollbar">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-3 py-2 text-xs font-bold rounded-t-lg transition-colors ${
+                className={`shrink-0 rounded-lg px-3.5 py-2 text-xs font-semibold transition ${
                   activeTab === tab.id
-                    ? "bg-cream text-brand-800 border border-line border-b-cream -mb-px"
-                    : "text-ink-muted hover:text-ink hover:bg-cream/50"
+                    ? "bg-brand-800 text-cream"
+                    : "text-ink-muted hover:bg-white hover:text-ink"
                 }`}
               >
                 {tab.label}
+                {typeof tab.count === "number" && (
+                  <span className="ml-1.5 tabular-nums opacity-70">
+                    {tab.count}
+                  </span>
+                )}
               </button>
             ))}
           </div>
+        </StudioCard>
 
-          <div className="p-6 space-y-5 bg-cream/40">
-            {activeTab === "overview" && (
-              <div className="space-y-5">
-                <div className="p-5 rounded-2xl bg-white border border-line space-y-2">
-                  <h4 className="font-black text-sm text-ink">Tentang Partai</h4>
-                  <p className="text-sm text-ink-muted leading-relaxed">
+        <FadeContent key={activeTab} duration={350}>
+          {activeTab === "overview" && (
+            <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+              <div className="space-y-5 lg:col-span-8">
+                <StudioCard className="space-y-3 p-5 sm:p-6">
+                  <h2 className="font-display text-lg text-brand-800">
+                    Tentang Partai
+                  </h2>
+                  <p className="text-sm leading-relaxed text-ink-soft">
                     {party.description}
                   </p>
-                </div>
+                </StudioCard>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 rounded-2xl bg-white border border-line text-center">
-                    <div
-                      className="text-3xl font-black"
-                      style={{ color: party.color }}
-                    >
-                      {party.dprSeats2024}
-                    </div>
-                    <div className="text-[10px] text-ink-muted mt-0.5 font-semibold uppercase tracking-wider">
-                      Kursi DPR 2024
-                    </div>
-                  </div>
-                  <div className="p-4 rounded-2xl bg-white border border-line text-center">
-                    <div
-                      className="text-3xl font-black"
-                      style={{ color: party.color }}
-                    >
-                      {party.memberCount}
-                    </div>
-                    <div className="text-[10px] text-ink-muted mt-0.5 font-semibold uppercase tracking-wider">
-                      Anggota
-                    </div>
-                  </div>
-                </div>
+                <StudioCard className="space-y-3 p-5 sm:p-6">
+                  <h2 className="font-display text-lg text-brand-800">
+                    Program Kerja Utama
+                  </h2>
+                  <ul className="space-y-2">
+                    {party.keyPrograms.map((prog) => (
+                      <li
+                        key={prog}
+                        className="flex items-start gap-2 text-sm text-ink-soft"
+                      >
+                        <span
+                          className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                          style={{ backgroundColor: party.color }}
+                        />
+                        <span>{prog}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </StudioCard>
+              </div>
 
-                <div className="p-5 rounded-2xl bg-white border border-line space-y-3">
-                  <h4 className="font-black text-sm text-ink">Ideologi & Fokus</h4>
+              <div className="space-y-5 lg:col-span-4">
+                <StudioCard className="space-y-3 p-5 sm:p-6">
+                  <h2 className="font-display text-lg text-brand-800">
+                    Ideologi
+                  </h2>
                   <div className="flex flex-wrap gap-2">
                     {party.ideology.map((i) => (
                       <span
                         key={i}
-                        className="px-3 py-1 rounded-full text-xs font-bold"
+                        className="rounded-full px-3 py-1 text-xs font-semibold"
                         style={{
                           backgroundColor: party.color + "15",
                           color: party.color,
@@ -183,245 +210,212 @@ export default function PartyDetailPage() {
                       </span>
                     ))}
                   </div>
-                  <div className="flex flex-wrap gap-2 mt-2">
+                </StudioCard>
+
+                <StudioCard className="space-y-3 p-5 sm:p-6">
+                  <h2 className="font-display text-lg text-brand-800">
+                    Fokus Utama
+                  </h2>
+                  <div className="flex flex-wrap gap-2">
                     {party.focusAreas.map((a) => (
                       <span
                         key={a}
-                        className="px-3 py-1 rounded-full text-xs font-semibold bg-cream text-ink-muted"
+                        className="rounded-full bg-cream px-3 py-1 text-xs font-semibold text-ink-muted"
                       >
                         {a}
                       </span>
                     ))}
                   </div>
-                </div>
-
-                <div className="p-5 rounded-2xl bg-white border border-line space-y-2">
-                  <h4 className="font-black text-sm text-ink">
-                    Program Kerja Utama
-                  </h4>
-                  <ul className="space-y-2">
-                    {party.keyPrograms.map((prog, i) => (
-                      <li
-                        key={i}
-                        className="flex items-start gap-2 text-sm text-ink-muted"
-                      >
-                        <span
-                          className="font-black text-lg leading-none"
-                          style={{ color: party.color }}
-                        >
-                          ·
-                        </span>
-                        <span>{prog}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                </StudioCard>
               </div>
-            )}
+            </div>
+          )}
 
-            {activeTab === "visi-misi" && (
-              <div className="space-y-5">
-                <div className="p-5 rounded-2xl bg-white border border-line space-y-3">
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="w-7 h-7 rounded-lg flex items-center justify-center text-sm font-bold"
-                      style={{
-                        backgroundColor: party.color + "15",
-                        color: party.color,
-                      }}
-                    >
-                      🎯
-                    </span>
-                    <h4 className="font-black text-sm text-ink">Visi</h4>
-                  </div>
-                  <p className="text-sm text-ink leading-relaxed bg-cream p-4 rounded-xl border border-line">
-                    &ldquo;{party.vision}&rdquo;
-                  </p>
-                </div>
+          {activeTab === "visi-misi" && (
+            <StudioCard className="overflow-hidden">
+              <div
+                className="px-6 py-8 sm:px-10 sm:py-10"
+                style={{ background: partyHeaderGradient(party) }}
+              >
+                <p
+                  className="text-[11px] font-bold uppercase tracking-[0.16em]"
+                  style={{ color: party.color }}
+                >
+                  Visi partai
+                </p>
+                <blockquote className="mt-4 max-w-3xl font-display text-xl leading-relaxed text-brand-800 sm:text-2xl sm:leading-snug">
+                  &ldquo;{party.vision}&rdquo;
+                </blockquote>
+              </div>
 
-                <div className="p-5 rounded-2xl bg-white border border-line space-y-3">
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="w-7 h-7 rounded-lg flex items-center justify-center text-sm font-bold"
-                      style={{
-                        backgroundColor: party.color + "15",
-                        color: party.color,
-                      }}
-                    >
-                      📌
-                    </span>
-                    <h4 className="font-black text-sm text-ink">Misi</h4>
+              <div className="grid border-t border-line lg:grid-cols-[1fr_240px]">
+                <div className="space-y-5 p-6 sm:p-8">
+                  <div>
+                    <h2 className="font-display text-lg text-brand-800">Misi</h2>
+                    <p className="mt-1 text-xs text-ink-muted">
+                      {party.mission.length} poin arah gerak partai
+                    </p>
                   </div>
-                  <ol className="space-y-3">
+                  <ol className="space-y-4">
                     {party.mission.map((m, i) => (
-                      <li
-                        key={i}
-                        className="flex items-start gap-3 text-sm text-ink-muted"
-                      >
+                      <li key={m} className="flex gap-4">
                         <span
-                          className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black text-white shrink-0 mt-0.5"
+                          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
                           style={{ backgroundColor: party.color }}
                         >
                           {i + 1}
                         </span>
-                        <span className="leading-relaxed">{m}</span>
+                        <p className="pt-1 text-sm leading-relaxed text-ink-soft">
+                          {m}
+                        </p>
                       </li>
                     ))}
                   </ol>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-white border border-line space-y-3">
-                  <div className="flex items-center gap-2">
-                    <span
-                      className="w-7 h-7 rounded-lg flex items-center justify-center text-sm font-bold"
-                      style={{
-                        backgroundColor: party.color + "15",
-                        color: party.color,
-                      }}
-                    >
-                      📍
-                    </span>
-                    <h4 className="font-black text-sm text-ink">Kantor Pusat</h4>
-                  </div>
-                  <p className="text-sm text-ink-muted">{party.headOffice}</p>
-                </div>
-              </div>
-            )}
-
-            {activeTab === "rekam-jejak" && (
-              <div className="space-y-4">
-                <p className="text-xs text-ink-muted font-semibold">
-                  Rekam jejak diverifikasi dari sumber publik terpercaya.
-                </p>
-                {party.trackRecords.map((tr) => (
-                  <div
-                    key={tr.id}
-                    className="p-5 rounded-2xl bg-white border border-line space-y-2"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-center gap-2">
-                        <span className="text-base">
-                          {categoryIcon(tr.category)}
-                        </span>
-                        <span className="text-xs font-black text-ink-muted uppercase tracking-wider">
-                          {tr.year}
-                        </span>
-                      </div>
-                      <span
-                        className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${sentimentBadge(tr.sentiment)}`}
-                      >
-                        {sentimentLabel(tr.sentiment)}
-                      </span>
-                    </div>
-                    <h5 className="font-black text-sm text-ink">{tr.title}</h5>
-                    <p className="text-xs text-ink-muted leading-relaxed">
-                      {tr.description}
+                <aside className="border-t border-line bg-cream/50 p-6 sm:p-8 lg:border-t-0 lg:border-l">
+                  <h2 className="font-display text-sm text-brand-800">
+                    Kantor Pusat
+                  </h2>
+                  <p className="mt-3 text-sm leading-relaxed text-ink-soft">
+                    {party.headOffice}
+                  </p>
+                  <div className="mt-6 space-y-2 border-t border-line/70 pt-5">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-ink-muted">
+                      Informasi
+                    </p>
+                    <p className="text-xs text-ink-muted">
+                      Berdiri {party.founded}
+                    </p>
+                    <p className="text-xs text-ink-muted">
+                      Ketua Umum: {party.chairman}
                     </p>
                   </div>
-                ))}
+                </aside>
               </div>
-            )}
+            </StudioCard>
+          )}
 
-            {activeTab === "pemilu" && (
-              <div className="space-y-4">
-                {party.electionResults.map((result, i) => {
-                  const pct = result.percentage;
-                  const seatPct = (result.seats / result.totalSeats) * 100;
-                  return (
-                    <div
-                      key={i}
-                      className="p-5 rounded-2xl bg-white border border-line space-y-3"
+          {activeTab === "rekam-jejak" && (
+            <div className="space-y-4">
+              <p className="text-xs font-semibold text-ink-muted">
+                Rekam jejak diverifikasi dari sumber publik terpercaya.
+              </p>
+              {party.trackRecords.map((tr) => (
+                <StudioCard key={tr.id} className="space-y-3 p-5 sm:p-6">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold uppercase tracking-wider text-ink-muted">
+                        {tr.year}
+                      </span>
+                      <span className="rounded-full bg-cream px-2 py-0.5 text-[10px] font-semibold text-ink-soft">
+                        {categoryLabel(tr.category)}
+                      </span>
+                    </div>
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${sentimentBadge(tr.sentiment)}`}
                     >
-                      <div className="flex items-center justify-between">
-                        <span className="font-black text-sm text-ink">
-                          Pemilu {result.electionType} {result.year}
-                        </span>
-                        <span className="text-xs text-ink-muted bg-cream px-2 py-0.5 rounded-full">
-                          Peringkat #{result.rank}
-                        </span>
-                      </div>
+                      {sentimentLabel(tr.sentiment)}
+                    </span>
+                  </div>
+                  <h3 className="font-display text-base text-brand-800">
+                    {tr.title}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-ink-soft">
+                    {tr.description}
+                  </p>
+                </StudioCard>
+              ))}
+            </div>
+          )}
 
-                      <div className="grid grid-cols-3 gap-3 text-center">
-                        <div>
-                          <div
-                            className="font-black text-xl"
-                            style={{ color: party.color }}
-                          >
-                            {pct.toFixed(2)}%
-                          </div>
-                          <div className="text-[9px] text-ink-muted uppercase tracking-wider font-semibold">
-                            Suara
-                          </div>
-                        </div>
-                        <div>
-                          <div
-                            className="font-black text-xl"
-                            style={{ color: party.color }}
-                          >
-                            {result.seats}
-                          </div>
-                          <div className="text-[9px] text-ink-muted uppercase tracking-wider font-semibold">
-                            Kursi DPR
-                          </div>
-                        </div>
-                        <div>
-                          <div
-                            className="font-black text-xl"
-                            style={{ color: party.color }}
-                          >
-                            {result.votes.toLocaleString("id-ID")}
-                          </div>
-                          <div className="text-[9px] text-ink-muted uppercase tracking-wider font-semibold">
-                            Total Suara
-                          </div>
-                        </div>
-                      </div>
+          {activeTab === "pemilu" && (
+            <div className="space-y-4">
+              {party.electionResults.map((result) => {
+                const pct = result.percentage;
+                const seatPct = (result.seats / result.totalSeats) * 100;
+                return (
+                  <StudioCard key={`${result.year}-${result.electionType}`} className="space-y-4 p-5 sm:p-6">
+                    <div className="flex items-center justify-between gap-3">
+                      <h3 className="font-display text-base text-brand-800">
+                        Pemilu {result.electionType} {result.year}
+                      </h3>
+                      <span className="rounded-full bg-cream px-2.5 py-1 text-[11px] font-semibold text-ink-muted">
+                        Peringkat #{result.rank}
+                      </span>
+                    </div>
 
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between text-[10px] text-ink-muted">
+                    <div className="grid grid-cols-3 gap-3 text-center">
+                      {[
+                        { label: "Suara", value: `${pct.toFixed(2)}%` },
+                        { label: "Kursi DPR", value: String(result.seats) },
+                        {
+                          label: "Total Suara",
+                          value: result.votes.toLocaleString("id-ID"),
+                        },
+                      ].map((item) => (
+                        <div
+                          key={item.label}
+                          className="rounded-xl border border-line bg-cream/50 px-3 py-3"
+                        >
+                          <p
+                            className="font-display text-xl tabular-nums"
+                            style={{ color: party.color }}
+                          >
+                            {item.value}
+                          </p>
+                          <p className="mt-1 text-[9px] font-semibold uppercase tracking-wider text-ink-muted">
+                            {item.label}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="space-y-3">
+                      <div>
+                        <div className="mb-1 flex justify-between text-[10px] text-ink-muted">
                           <span>Share suara</span>
                           <span>{pct.toFixed(2)}%</span>
                         </div>
-                        <div className="w-full h-2 bg-cream rounded-full overflow-hidden">
+                        <div className="h-2 overflow-hidden rounded-full bg-cream">
                           <div
-                            className="h-full rounded-full transition-all"
+                            className="h-full rounded-full"
                             style={{
                               width: `${Math.min(pct * 4, 100)}%`,
                               backgroundColor: party.color,
                             }}
                           />
                         </div>
-                        <div className="flex justify-between text-[10px] text-ink-muted mt-2">
+                      </div>
+                      <div>
+                        <div className="mb-1 flex justify-between text-[10px] text-ink-muted">
                           <span>Proporsi kursi DPR</span>
                           <span>{seatPct.toFixed(1)}%</span>
                         </div>
-                        <div className="w-full h-2 bg-cream rounded-full overflow-hidden">
+                        <div className="h-2 overflow-hidden rounded-full bg-cream">
                           <div
-                            className="h-full rounded-full transition-all"
+                            className="h-full rounded-full"
                             style={{
                               width: `${Math.min(seatPct * 5, 100)}%`,
-                              backgroundColor:
-                                party.secondaryColor ?? party.color,
+                              backgroundColor: party.secondaryColor ?? party.color,
                             }}
                           />
                         </div>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </StudioCard>
+                  </StudioCard>
+                );
+              })}
+            </div>
+          )}
+        </FadeContent>
 
-        <div className="flex justify-start">
-          <Link
-            href="/partai"
-            className="inline-flex items-center gap-2 rounded-xl border border-line bg-white px-4 py-2.5 text-xs font-bold text-ink-soft hover:bg-cream transition-colors"
-          >
-            ← Kembali ke Cari Partai
-          </Link>
-        </div>
+        <Link
+          href="/partai"
+          className="inline-flex items-center gap-2 rounded-xl border border-line bg-white px-4 py-2.5 text-xs font-semibold text-ink-soft transition-all hover:bg-sage hover:border-sage hover:text-white"
+        >
+          ← Kembali ke Cari Partai
+        </Link>
       </div>
     </StudioShell>
   );

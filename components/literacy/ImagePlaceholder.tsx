@@ -51,10 +51,7 @@ export default function ImagePlaceholder({
           <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
         </svg>
       </div>
-      <p className="mt-3 text-xs font-bold text-brand-800">{label}</p>
-      <p className="mt-1 text-[11px] font-medium text-ink-muted">
-        Slot Gambar (Siap Diisi)
-      </p>
+
     </div>
   );
 }

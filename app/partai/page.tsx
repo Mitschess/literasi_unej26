@@ -1,47 +1,47 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from "react";
-import Link from "next/link";
 import { mockParties, Party } from "@/lib/data/parties";
 import { PartyCard } from "@/components/partai/PartyCard";
 import {
-  spectrumLabel,
-  spectrumColor,
+  StudioShell,
+  StudioCrumb,
+  StudioCard,
+} from "@/components/literacy/StudioChrome";
+import {
   sentimentBadge,
   sentimentLabel,
   categoryIcon,
 } from "@/lib/party/display";
-
-const SPECTRUM_FILTERS: { value: string; label: string }[] = [
-  { value: "all", label: "Semua" },
-  { value: "kiri", label: "Kiri" },
-  { value: "tengah-kiri", label: "Tengah-Kiri" },
-  { value: "tengah", label: "Tengah" },
-  { value: "tengah-kanan", label: "Tengah-Kanan" },
-  { value: "kanan", label: "Kanan" },
-];
 
 const PAGE_SIZE = 8;
 
 // ─── Comparison Table ─────────────────────────────────────────────────────────
 function PartyComparisonTable({ parties, onClose }: { parties: Party[]; onClose: () => void }) {
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="font-black text-xl text-ink">Tabel Perbandingan Partai</h2>
-          <p className="text-xs text-ink-muted mt-0.5">Membandingkan {parties.length} partai secara side-by-side</p>
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-1">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sage">
+            Perbandingan
+          </p>
+          <h2 className="font-display text-2xl text-brand-800">
+            Tabel Perbandingan Partai
+          </h2>
+          <p className="text-xs text-ink-muted">
+            Membandingkan {parties.length} partai secara side-by-side
+          </p>
         </div>
         <button
           onClick={onClose}
-          className="px-4 py-2 rounded-xl bg-cream border border-line text-xs font-bold text-ink-soft hover:bg-sage hover:border-sage hover:text-white transition-colors"
+          className="shrink-0 rounded-xl border border-line bg-cream px-4 py-2.5 text-xs font-semibold text-ink-soft transition-all hover:bg-sage hover:border-sage hover:text-white"
         >
           ← Kembali Pilih
         </button>
       </div>
 
-      <div className="overflow-x-auto rounded-2xl border border-line bg-white shadow-sm">
-        <table className="w-full text-left border-collapse" style={{ minWidth: `${parties.length * 240 + 180}px` }}>
+      <StudioCard className="overflow-x-auto">
+        <table className="w-full min-w-[720px] border-collapse text-left text-xs text-ink-soft">
           <thead>
             <tr className="border-b border-line bg-cream/60">
               <th className="p-4 w-44 text-xs font-black uppercase text-ink-muted">Aspek / Partai</th>
@@ -68,16 +68,6 @@ function PartyComparisonTable({ parties, onClose }: { parties: Party[]; onClose:
             <tr>
               <td className="p-4 font-bold bg-cream/60 text-ink">Ketua Umum</td>
               {parties.map((p) => <td key={p.id} className="p-4 font-semibold text-ink">{p.chairman}</td>)}
-            </tr>
-            <tr>
-              <td className="p-4 font-bold bg-cream/60 text-ink">Spektrum Politik</td>
-              {parties.map((p) => (
-                <td key={p.id} className="p-4">
-                  <span className="px-2 py-0.5 rounded text-[10px] font-bold border" style={{ color: spectrumColor[p.spectrum], borderColor: spectrumColor[p.spectrum] + "44", backgroundColor: spectrumColor[p.spectrum] + "10" }}>
-                    {spectrumLabel[p.spectrum]}
-                  </span>
-                </td>
-              ))}
             </tr>
             <tr>
               <td className="p-4 font-bold bg-cream/60 text-ink">Ideologi</td>
@@ -171,7 +161,7 @@ function PartyComparisonTable({ parties, onClose }: { parties: Party[]; onClose:
             </tr>
           </tbody>
         </table>
-      </div>
+      </StudioCard>
     </div>
   );
 }
@@ -179,7 +169,6 @@ function PartyComparisonTable({ parties, onClose }: { parties: Party[]; onClose:
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function PartyPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedSpectrum, setSelectedSpectrum] = useState<string>("all");
   const [compareMode, setCompareMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isComparing, setIsComparing] = useState(false);
@@ -191,10 +180,9 @@ export default function PartyPage() {
         const q = searchQuery.toLowerCase();
         if (!p.name.toLowerCase().includes(q) && !p.shortName.toLowerCase().includes(q) && !p.chairman.toLowerCase().includes(q)) return false;
       }
-      if (selectedSpectrum !== "all" && p.spectrum !== selectedSpectrum) return false;
       return true;
     });
-  }, [searchQuery, selectedSpectrum]);
+  }, [searchQuery]);
 
   const totalPages = Math.max(1, Math.ceil(filteredParties.length / PAGE_SIZE));
 
@@ -205,7 +193,7 @@ export default function PartyPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, selectedSpectrum]);
+  }, [searchQuery]);
 
   useEffect(() => {
     if (currentPage > totalPages) {
@@ -232,98 +220,87 @@ export default function PartyPage() {
   };
 
   return (
-    <div className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <StudioShell>
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       {isComparing && selectedParties.length >= 2 ? (
-        <PartyComparisonTable
-          parties={selectedParties}
-          onClose={() => setIsComparing(false)}
-        />
+        <>
+          <StudioCrumb
+            items={[
+              { label: "Beranda", href: "/" },
+              { label: "Cari Partai", href: "/partai" },
+              { label: "Perbandingan" },
+            ]}
+          />
+          <div className="mt-8">
+            <PartyComparisonTable
+              parties={selectedParties}
+              onClose={() => setIsComparing(false)}
+            />
+          </div>
+        </>
       ) : (
         <div className="space-y-8">
-          {/* Page header */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 text-xs text-ink-muted">
-              <Link href="/" className="hover:text-ink transition-colors">Beranda</Link>
-              <span className="opacity-40">/</span>
-              <span className="font-semibold text-ink">Cari Partai</span>
-            </div>
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-              <div className="space-y-2">
-                <div className="inline-flex items-center gap-2">
-                  <span className="h-px w-8 bg-sage" />
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-sage">Direktori publik</p>
-                </div>
-                <h1 className="font-display text-3xl sm:text-4xl tracking-tight text-brand-800">
-                  Direktori Partai Politik
-                </h1>
-                <p className="text-sm text-ink-muted max-w-xl leading-relaxed">
-                  Telusuri profil, visi-misi, dan rekam jejak partai yang terdaftar di Pemilu legislatif terakhir.
+          <StudioCrumb
+            items={[
+              { label: "Beranda", href: "/" },
+              { label: "Cari Partai" },
+            ]}
+          />
+
+          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2">
+                <span className="h-px w-8 bg-sage" />
+                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-sage">
+                  Direktori publik
                 </p>
               </div>
-              <div className="w-24 h-24 sm:w-28 sm:h-28 shrink-0 self-center">
-                <img src="/images/assets/program-visi-misi.png" alt="Cari Partai" className="w-full h-full object-contain drop-shadow-md" />
-              </div>
+              <h1 className="font-display text-3xl tracking-tight text-brand-800 sm:text-4xl">
+                Cari & Bandingkan Partai
+              </h1>
+              <p className="max-w-xl text-sm leading-relaxed text-ink-muted">
+                Telusuri profil, visi-misi, dan rekam jejak partai yang terdaftar di Pemilu legislatif terakhir.
+              </p>
+            </div>
+            <div className="h-24 w-24 shrink-0 self-center overflow-hidden rounded-2xl border border-line bg-white p-1.5 sm:h-32 sm:w-32">
+              <img
+                src="/images/parpol/kumpulan_partai.png"
+                alt="Logo partai politik Indonesia"
+                className="h-full w-full object-contain"
+              />
             </div>
           </div>
 
-          {/* Controls */}
-          <div className="rounded-2xl border border-line bg-white p-5 space-y-5">
-            <div className="relative">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari nama partai, singkatan, atau ketua umum..."
-                className="w-full rounded-xl border border-line bg-cream py-3 pl-10 pr-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sage"
-              />
-              <svg className="absolute left-3 top-3.5 h-5 w-5 text-ink-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-
-            <div className="space-y-3">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="space-y-1">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-ink-muted">
-                    Spektrum politik
-                  </p>
-                  <p className="text-xs text-ink-muted">
-                    Filter berdasarkan posisi ideologis partai
-                  </p>
-                </div>
-                <button
-                  onClick={() => {
-                    setCompareMode(!compareMode);
-                    if (compareMode) {
-                      setSelectedIds([]);
-                      setIsComparing(false);
-                    }
-                  }}
-                  className={`shrink-0 rounded-xl px-4 py-2.5 text-xs font-semibold transition-all ${
-                    compareMode
-                      ? "bg-brand-800 text-cream shadow-sm"
-                      : "border border-line bg-cream text-ink-soft hover:bg-sage hover:border-sage hover:text-white"
-                  }`}
-                >
-                  {compareMode ? "✓ Mode Bandingkan" : "Bandingkan Partai"}
-                </button>
+          <div className="space-y-4 rounded-2xl border border-line bg-white p-5">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Cari nama partai, singkatan, atau ketua umum..."
+                  className="w-full rounded-xl border border-line bg-cream py-3 pl-10 pr-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-sage"
+                />
+                <svg className="absolute left-3 top-3.5 h-5 w-5 text-ink-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
               </div>
-
-              <div className="flex flex-wrap gap-2">
-                {SPECTRUM_FILTERS.map((opt) => (
-                  <button
-                    key={opt.value}
-                    onClick={() => setSelectedSpectrum(opt.value)}
-                    className={`rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all ${
-                      selectedSpectrum === opt.value
-                        ? "border-brand-800 bg-brand-800 text-cream"
-                        : "border-line bg-cream text-ink-soft hover:bg-sage hover:border-sage hover:text-white"
-                    }`}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
+              <button
+                onClick={() => {
+                  setCompareMode(!compareMode);
+                  if (compareMode) {
+                    setSelectedIds([]);
+                    setIsComparing(false);
+                  }
+                }}
+                className={`shrink-0 rounded-xl px-4 py-3 text-xs font-semibold transition-all ${
+                  compareMode
+                    ? "bg-brand-800 text-cream shadow-sm"
+                    : "border border-line bg-cream text-ink-soft hover:bg-sage hover:border-sage hover:text-white"
+                }`}
+              >
+                {compareMode ? "✓ Mode Bandingkan" : "Bandingkan Partai"}
+              </button>
             </div>
 
             {/* Stats & reset row */}
@@ -339,9 +316,9 @@ export default function PartyPage() {
                 )}
                 {compareMode && <span className="ml-2 text-brand-700 font-bold">· {selectedIds.length} terpilih</span>}
               </span>
-              {(searchQuery || selectedSpectrum !== "all") && (
+              {searchQuery && (
                 <button
-                  onClick={() => { setSearchQuery(""); setSelectedSpectrum("all"); setCurrentPage(1); }}
+                  onClick={() => { setSearchQuery(""); setCurrentPage(1); }}
                   className="text-brand-700 font-bold hover:underline"
                 >
                   Reset Filter
@@ -399,9 +376,9 @@ export default function PartyPage() {
           {filteredParties.length === 0 && (
             <div className="rounded-2xl border border-line bg-white p-12 text-center">
               <h3 className="font-display text-lg text-brand-800">Partai tidak ditemukan</h3>
-              <p className="mt-2 text-xs text-ink-muted">Coba ubah kata kunci atau filter spektrum</p>
+              <p className="mt-2 text-xs text-ink-muted">Coba ubah kata kunci pencarian</p>
               <button
-                onClick={() => { setSearchQuery(""); setSelectedSpectrum("all"); setCurrentPage(1); }}
+                onClick={() => { setSearchQuery(""); setCurrentPage(1); }}
                 className="mt-5 rounded-xl border border-line bg-cream px-4 py-2 text-xs font-semibold text-ink-soft transition-all hover:bg-sage hover:border-sage hover:text-white"
               >
                 Reset filter
@@ -411,15 +388,15 @@ export default function PartyPage() {
 
           {/* Floating compare bar */}
           {compareMode && selectedIds.length > 0 && (
-            <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-full max-w-lg px-4">
-              <div className="p-4 bg-brand-900 text-white rounded-2xl shadow-2xl flex items-center justify-between gap-4">
-                <div className="text-xs">
-                  <span className="font-bold">{selectedIds.length} partai</span> dipilih
+            <div className="fixed bottom-6 left-1/2 z-40 w-full max-w-lg -translate-x-1/2 px-4">
+              <div className="flex items-center justify-between gap-4 rounded-2xl border border-sage/30 bg-white p-4 shadow-xl shadow-sage/10 backdrop-blur-xl">
+                <div className="text-xs text-ink-soft">
+                  <span className="font-bold text-ink">{selectedIds.length} partai</span> dipilih
                 </div>
                 <div className="flex gap-2">
                   <button
                     onClick={() => setSelectedIds([])}
-                    className="px-3 py-2 rounded-xl bg-white/10 text-white text-xs font-bold hover:bg-white/20 transition"
+                    className="rounded-xl border border-line bg-cream px-3 py-2 text-xs font-semibold text-ink-soft transition-all hover:bg-sage hover:border-sage hover:text-white"
                   >
                     Reset
                   </button>
@@ -432,9 +409,9 @@ export default function PartyPage() {
                       setIsComparing(true);
                     }}
                     disabled={selectedIds.length < 2}
-                    className="rounded-xl bg-gold px-5 py-2 text-xs font-black text-ink-dark shadow transition-all hover:bg-yellow-400 disabled:opacity-50"
+                    className="rounded-xl bg-brand-800 px-5 py-2 text-xs font-bold text-cream transition hover:bg-brand-700 disabled:opacity-50"
                   >
-                    {selectedIds.length < 2 ? "Pilih Min. 2 Partai" : "Bandingkan Sekarang →"}
+                    {selectedIds.length < 2 ? "Pilih Min. 2" : "Bandingkan →"}
                   </button>
                 </div>
               </div>
@@ -442,6 +419,7 @@ export default function PartyPage() {
           )}
         </div>
       )}
-    </div>
+      </div>
+    </StudioShell>
   );
 }
