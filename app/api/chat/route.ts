@@ -50,12 +50,54 @@ ${claimsSummary}`;
       })
       .join("\n\n---\n\n");
 
+    // Check if the query is a greeting, simple conversation, gibberish, or irrelevant to political context
+    const isGreetingOrConversationOrIrrelevant = (msg: string): boolean => {
+      const lower = msg.toLowerCase().trim();
+      
+      const knownShortcuts = ["kpu", "dpr", "pkb", "pks", "pan", "ppp", "pbb", "psi"];
+      if (lower.length <= 3 && !knownShortcuts.includes(lower)) {
+        return true;
+      }
+      
+      const greetingsAndChat = [
+        "halo", "hai", "hello", "hi", "hey", "pagi", "siang", "sore", "malam", "apa kabar",
+        "siapa kamu", "siapa anda", "kamu siapa", "anda siapa", "siapa sih kamu", "siapa sih anda",
+        "terima kasih", "makasih", "thank you", "thanks", "ok", "oke", "sip", "siap", "baik", "test", "tes"
+      ];
+      if (greetingsAndChat.some(g => lower === g || lower.startsWith(g + " ") || lower.endsWith(" " + g))) {
+        return true;
+      }
+      
+      const words = lower.split(/\s+/);
+      for (const w of words) {
+        if (w.length > 4 && !/[aeiouy]/i.test(w)) {
+          return true;
+        }
+      }
+      
+      const politicalKeywords = [
+        "anies", "baswedan", "prabowo", "subianto", "ganjar", "pranowo", "gibran", "rakabuming", "mahfud", "khofifah", "iskandar",
+        "kandidat", "calon", "pemilu", "pilpres", "pilkada", "parlemen", "partai", "janji", "program", "visi", "misi", "rekam jejak", 
+        "koalisi", "suara", "politik", "demokrasi", "kpu", "bawaslu", "debat", "dpr", "presiden", "menteri", "pemerintah", "negara", 
+        "indonesia", "kabinet", "dprd", "gubernur", "walikota", "bupati", "suara", "pemilih"
+      ];
+      
+      const hasPoliticalKeyword = politicalKeywords.some(keyword => lower.includes(keyword));
+      if (!hasPoliticalKeyword) {
+        return true;
+      }
+      
+      return false;
+    };
+
+    const shouldSkipSources = isGreetingOrConversationOrIrrelevant(message);
+
     // If TAVILY_API_KEY is available, fetch live search results from Tavily
     const tavilyApiKey = process.env.TAVILY_API_KEY;
     let tavilyContext = "";
     let tavilySources: any[] = [];
 
-    if (tavilyApiKey) {
+    if (tavilyApiKey && !shouldSkipSources) {
       try {
         const tavilyRes = await fetch("https://api.tavily.com/search", {
           method: "POST",
@@ -65,7 +107,7 @@ ${claimsSummary}`;
           },
           body: JSON.stringify({
             query: message,
-            max_results: 3,
+            max_results: 5,
             search_depth: "basic",
           }),
         });
@@ -146,15 +188,15 @@ ${tavilyContext ? `[Hasil Pencarian Live Internet (Tavily)]\n${tavilyContext}` :
 
       // Sanitizer: 100% Guarantee removal of **, ### headers, and generic AI conclusions
       const reply = rawReply
-        .replace(/\*\*/g, "")
-        .replace(/^#{1,6}\s+/gm, "")
-        .replace(/\n\nKedua kandidat memiliki fokus yang berbeda[\s\S]*/i, "")
-        .trim();
+          .replace(/\*\*/g, "")
+          .replace(/^#{1,6}\s+/gm, "")
+          .replace(/\n\nKedua kandidat memiliki fokus yang berbeda[\s\S]*/i, "")
+          .trim();
 
       // Use live Tavily search sources if available, otherwise match mock sources
       let citedSources = tavilySources;
 
-      if (citedSources.length === 0) {
+      if (!shouldSkipSources && citedSources.length === 0) {
         citedSources = mockSources.filter((s) => {
           const textToMatch = (message + " " + reply).toLowerCase();
           const pub = s.publisher || "";
@@ -167,8 +209,8 @@ ${tavilyContext ? `[Hasil Pencarian Live Internet (Tavily)]\n${tavilyContext}` :
           return false;
         });
 
-        if (citedSources.length === 0) {
-          citedSources = [mockSources[0], mockSources[7]];
+        if (citedSources.length < 4) {
+          citedSources = mockSources.slice(0, 5);
         }
       }
 
@@ -181,26 +223,29 @@ ${tavilyContext ? `[Hasil Pencarian Live Internet (Tavily)]\n${tavilyContext}` :
 
     // Fallback Mock Response when OPENAI_API_KEY is not set in .env.local
     let botAnswer = "";
-    let citedSources = [mockSources[0]];
+    let citedSources = shouldSkipSources ? [] : mockSources.slice(0, 5);
 
-    if (
+    if (shouldSkipSources) {
+      botAnswer = "Halo! Saya adalah asisten virtual POLITRACK. Ada yang bisa saya bantu terkait data kandidat politik?";
+    } else if (
       lowerQ.includes("perbedaan") ||
       (lowerQ.includes("ahmad") && lowerQ.includes("siti")) ||
       (lowerQ.includes("anies") && lowerQ.includes("prabowo"))
     ) {
       botAnswer =
         "Berikut ringkasan program kandidat:\n\nAnies Baswedan (NasDem):\n- Visi: Mewujudkan Indonesia adil & makmur.\n- Program unggulan: Integrasi Transportasi JakLingko, KJP Plus.\n\nPrabowo Subianto (Gerindra):\n- Visi: Bersama Indonesia Maju menuju Indonesia Emas 2045.\n- Program unggulan: Makan Bergizi Gratis & Modernisasi Alutsista.";
-      citedSources = [mockSources[0], mockSources[1], mockSources[4]];
+      citedSources = mockSources.slice(0, 5);
     } else if (lowerQ.includes("kehadiran") || lowerQ.includes("sidang")) {
       botAnswer =
         "Berdasarkan data resmi terdaftar, tingkat kehadiran sidang kandidat terverifikasi rata-rata berada pada kisaran 87% - 92% per periode jabatan.";
-      citedSources = [mockSources[1]];
+      citedSources = mockSources.slice(0, 4);
     } else if (lowerQ.includes("janji") || lowerQ.includes("makan gratis")) {
       botAnswer =
         "Program Makan Bergizi Gratis dari kandidat Prabowo Subianto saat ini berstatus Dalam Proses (In Progress) dengan target 82,9 juta penerima manfaat di seluruh Indonesia.";
-      citedSources = [mockSources[3], mockSources[4]];
+      citedSources = mockSources.slice(0, 5);
     } else {
       botAnswer = `Berdasarkan data terverifikasi POLITRACK mengenai "${message}", kandidat memiliki catatan rekam jejak yang dapat ditelusuri di platform.`;
+      citedSources = mockSources.slice(0, 4);
     }
 
     return NextResponse.json({

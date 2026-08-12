@@ -193,11 +193,10 @@ function CandidateComparisonContent() {
                 <div
                   key={candidate.id}
                   onClick={() => toggleCandidateSelection(candidate.id)}
-                  className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between space-y-3 ${
-                    isSelected
+                  className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between space-y-3 ${isSelected
                       ? "bg-brand-50/50 border-brand-700 shadow-md ring-2 ring-brand-700"
                       : "bg-white border-line hover:border-sage hover:shadow-sm"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-start gap-3">
                     <img
@@ -226,11 +225,10 @@ function CandidateComparisonContent() {
                       e.stopPropagation();
                       toggleCandidateSelection(candidate.id);
                     }}
-                    className={`w-full py-2 rounded-xl text-xs font-bold transition-all ${
-                      isSelected
+                    className={`w-full py-2 rounded-xl text-xs font-bold transition-all ${isSelected
                         ? "bg-brand-800 text-white shadow-sm"
                         : "bg-cream border border-line text-ink-soft hover:bg-sage hover:text-white"
-                    }`}
+                      }`}
                   >
                     {isSelected ? "✓ Terpilih" : "+ Pilih Bandingkan"}
                   </button>
