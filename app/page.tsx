@@ -222,9 +222,16 @@ export default function Home() {
                     lengkap dengan sitasi sumber, tanpa mendorong pilihan politik.
                   </p>
                 </div>
-                <Link href="/asisten" className="btn-gold shrink-0">
-                  Buka Asisten AI
-                </Link>
+                <div className="flex flex-col items-center gap-5 shrink-0">
+                  <img
+                    src="/images/assets/ai-assistant.png"
+                    alt="AI Assistant"
+                    className="h-28 w-28 sm:h-36 sm:w-36 object-contain drop-shadow-lg"
+                  />
+                  <Link href="/asisten" className="btn-gold shrink-0">
+                    Buka Asisten AI
+                  </Link>
+                </div>
               </div>
             </div>
           </AnimatedContent>

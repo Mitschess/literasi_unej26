@@ -51,7 +51,9 @@ export default function ImagePlaceholder({
           <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
         </svg>
       </div>
-
+      {label && (
+        <p className="mt-3 max-w-[240px] text-xs font-semibold text-brand-600">{label}</p>
+      )}
     </div>
   );
 }

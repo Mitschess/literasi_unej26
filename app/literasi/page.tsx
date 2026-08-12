@@ -131,7 +131,7 @@ export default function LiteracyCenterPage() {
                     {article.category}
                   </span>
                   <span className="text-ink-muted text-[11px] font-medium">
-                    📖 {article.readTime} mtk baca
+                    {article.readTime} menit baca
                   </span>
                 </div>
                 <h3 className="text-base font-extrabold text-ink hover:text-brand-700 transition-colors leading-snug">

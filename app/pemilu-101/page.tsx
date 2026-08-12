@@ -5,6 +5,7 @@ import Link from "next/link";
 import AnimatedContent from "@/components/AnimatedContent";
 import FadeContent from "@/components/FadeContent";
 import ImagePlaceholder from "@/components/literacy/ImagePlaceholder";
+import SimulasiTPS from "@/components/literacy/SimulasiTPS";
 import { antiHoaxTips } from "@/lib/data/issues";
 import {
   BijakShell,
@@ -77,11 +78,6 @@ export default function Pemilu101Page() {
   const [activeTab, setActiveTab] = useState<TabId>("101");
   const [knowledgeLevel, setKnowledgeLevel] = useState<"baru" | "paham" | null>(null);
   
-  // Simulasi TPS State
-  const [simulasiStep, setSimulasiStep] = useState<number>(1);
-  const [selectedBallot, setSelectedBallot] = useState<string | null>(null);
-  const [hasInkedFinger, setHasInkedFinger] = useState<boolean>(false);
-
   // Video Modal State
   const [showVideoModal, setShowVideoModal] = useState<boolean>(false);
 
@@ -177,6 +173,13 @@ export default function Pemilu101Page() {
                   }`}
                 >
                   <div className="space-y-4">
+                    {/* Image Slot for Card A */}
+                    <ImagePlaceholder
+                      src="/images/assets/bingung.png"
+                      alt="Gambar Belum Paham Pemilu"
+                      label="Gambar Slot: Masih Pemula"
+                      aspectRatio="h-40"
+                    />
 
                     <h3 className="font-display text-xl font-bold text-brand-800">
                       Masih belum tahu apa-apa
@@ -184,16 +187,6 @@ export default function Pemilu101Page() {
                     <p className="text-sm text-ink-soft leading-relaxed">
                       Gapapa banget! Yuk belajar bareng tentang apa, siapa yang bakal dipilih dan kenapa kita harus memilih di Pemilu nanti!
                     </p>
-
-                    {/* Image Slot for Card A */}
-                    <ImagePlaceholder
-                      src="/images/assets/bingung.png"
-                      alt="Gambar Belum Paham Pemilu"
-                      label="Gambar Slot: Masih Pemula"
-                      aspectRatio="h-40"
-                      className="mt-4"
-                    />
-
                   </div>
 
                   <div className="mt-6 pt-4 border-t border-line/60 flex items-center justify-between">
@@ -224,6 +217,13 @@ export default function Pemilu101Page() {
                   }`}
                 >
                   <div className="space-y-4">
+                    {/* Image Slot for Card B */}
+                    <ImagePlaceholder
+                      src="/images/assets/tahu.png"
+                      alt="Gambar Lumayan Paham"
+                      label="Gambar Slot: Udah Paham"
+                      aspectRatio="h-40"
+                    />
 
                     <h3 className="font-display text-xl font-bold text-brand-800">
                       Udah lumayan paham!
@@ -231,15 +231,6 @@ export default function Pemilu101Page() {
                     <p className="text-sm text-ink-soft leading-relaxed">
                       Biar tambah naik level, nih pelajari gimana caranya kamu bisa terhindar dari Hoax & Misinformasi menjelang Pemilu!
                     </p>
-                    {/* Image Slot for Card B */}
-                    <ImagePlaceholder
-                      src=""
-                      alt="Gambar Lumayan Paham"
-                      label="Gambar Slot: Udah Paham"
-                      aspectRatio="h-40"
-                      className="mt-4"
-                    />
-
                   </div>
 
                   <div className="mt-6 pt-4 border-t border-line/60 flex items-center justify-between">
@@ -733,224 +724,8 @@ export default function Pemilu101Page() {
 
         {/* TAB 2: INTERACTIVE SIMULASI TPS */}
         {activeTab === "simulasi" && (
-          <FadeContent duration={400} className="space-y-6">
-            <BijakCard tint="paper" className="p-6 sm:p-8">
-              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line pb-6">
-                <div>
-                  <BijakLabel variant="teal">Latihan Praktis</BijakLabel>
-                  <h2 className="mt-2 font-display text-2xl font-bold text-brand-800 sm:text-3xl">
-                    Simulasi Hari Pemilu di TPS
-                  </h2>
-                  <p className="mt-1 text-sm text-ink-soft">
-                    Cobalah langkah-langkah pencoblosan sesuai standar Komisi Pemilihan Umum
-                  </p>
-                </div>
-                
-                {/* Step Indicators */}
-                <div className="flex items-center gap-2 bg-brand-50 p-2 rounded-2xl border border-brand-100">
-                  {[1, 2, 3].map((stepNum) => (
-                    <button
-                      key={stepNum}
-                      onClick={() => setSimulasiStep(stepNum)}
-                      className={`flex h-9 w-9 items-center justify-center rounded-xl text-xs font-bold transition ${
-                        simulasiStep === stepNum
-                          ? "bg-brand-800 text-cream shadow-2xs"
-                          : "bg-white text-ink-muted border border-line hover:border-sage"
-                      }`}
-                    >
-                      {stepNum}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* SIMULASI STEP 1: REGISTRASI & VERIFIKASI */}
-              {simulasiStep === 1 && (
-                <div className="py-8 space-y-6">
-                  <div className="max-w-2xl space-y-4">
-                    <span className="inline-block rounded-md bg-sage/20 px-3 py-1 text-xs font-bold text-brand-800">
-                      Langkah 1 dari 3: Registrasi KPPS
-                    </span>
-                    <h3 className="font-display text-xl font-bold text-brand-800 sm:text-2xl">
-                      Verifikasi Identitas di Meja Pendaftaran
-                    </h3>
-                    <p className="text-sm text-ink-soft leading-relaxed">
-                      Saat tiba di TPS, serahkan formulir C6 (undangan) dan KTP-el kepada petugas KPPS 4/5. Petugas akan mencocokkan identitasmu dengan Daftar Pemilih Tetap (DPT) dan memintamu menandatangani daftar hadir.
-                    </p>
-
-                    <div className="rounded-2xl border border-line bg-brand-50/50 p-4 space-y-3">
-                      <p className="text-xs font-bold text-brand-800 uppercase tracking-wider">Dokumen Wajib Bawa:</p>
-                      <div className="flex flex-wrap gap-2">
-                        <span className="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-brand-800 border border-line">
-                          <IconCheckCircle className="text-sage" /> KTP-el / Surat Keterangan
-                        </span>
-                        <span className="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-brand-800 border border-line">
-                          <IconCheckCircle className="text-sage" /> Formulir C6 (Undangan Pemilih)
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Image Slot for Step 1 TPS */}
-                  <ImagePlaceholder
-                    src=""
-                    alt="Simulasi Meja Registrasi TPS"
-                    label="Gambar Simulasi: Meja Registrasi KTP & C6"
-                    aspectRatio="aspect-[21/9]"
-                    className="w-full"
-                  />
-
-                  <div className="flex justify-end pt-4">
-                    <button
-                      onClick={() => setSimulasiStep(2)}
-                      className="inline-flex items-center gap-2 rounded-full bg-brand-800 px-6 py-3 text-sm font-bold text-cream transition hover:bg-brand-700"
-                    >
-                      <span>Lanjut ke Bilik Suara</span>
-                      <IconArrowRight className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* SIMULASI STEP 2: BILIK SUARA & PENCHOBLOSAN */}
-              {simulasiStep === 2 && (
-                <div className="py-8 space-y-6">
-                  <div className="max-w-2xl space-y-4">
-                    <span className="inline-block rounded-md bg-sage/20 px-3 py-1 text-xs font-bold text-brand-800">
-                      Langkah 2 dari 3: Bilik Pemilihan
-                    </span>
-                    <h3 className="font-display text-xl font-bold text-brand-800 sm:text-2xl">
-                      Pencoblosan Surat Suara
-                    </h3>
-                    <p className="text-sm text-ink-soft leading-relaxed">
-                      Buka surat suara di dalam bilik yang tertutup. Gunakan paku yang disediakan untuk mencoblos SATU kali pada nomor, foto, nama pasangan, atau logo partai.
-                    </p>
-                  </div>
-
-                  {/* Interactive Ballot Selector */}
-                  <div className="space-y-4">
-                    <p className="text-xs font-bold text-brand-800">Pilih Simulasi Coblos Pasangan Calon:</p>
-                    <div className="grid gap-4 sm:grid-cols-3">
-                      {[
-                        { id: "paslon-1", num: "01", name: "Pasangan Calon Nomor 01" },
-                        { id: "paslon-2", num: "02", name: "Pasangan Calon Nomor 02" },
-                        { id: "paslon-3", num: "03", name: "Pasangan Calon Nomor 03" },
-                      ].map((item) => (
-                        <button
-                          key={item.id}
-                          onClick={() => setSelectedBallot(item.id)}
-                          className={`relative flex flex-col items-center justify-center rounded-2xl border p-6 text-center transition ${
-                            selectedBallot === item.id
-                              ? "border-brand-800 bg-brand-800 text-cream shadow-md"
-                              : "border-line bg-white hover:border-sage"
-                          }`}
-                        >
-                          <span className="text-2xl font-black font-display mb-2">{item.num}</span>
-                          <span className="text-xs font-bold">{item.name}</span>
-                          {selectedBallot === item.id && (
-                            <span className="mt-3 inline-flex items-center gap-1 rounded-full bg-sage px-3 py-0.5 text-[10px] font-bold text-brand-900">
-                              <IconCheckCircle className="h-3 w-3" /> Dicoblos Sah
-                            </span>
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Image Slot for Step 2 TPS */}
-                  <ImagePlaceholder
-                    src=""
-                    alt="Simulasi Bilik Suara"
-                    label="Gambar Simulasi: Bilik Suara & Surat Suara"
-                    aspectRatio="aspect-[21/9]"
-                    className="w-full"
-                  />
-
-                  <div className="flex items-center justify-between pt-4">
-                    <button
-                      onClick={() => setSimulasiStep(1)}
-                      className="inline-flex items-center gap-2 rounded-full border border-line bg-white px-5 py-2.5 text-xs font-bold text-ink-soft hover:bg-brand-50"
-                    >
-                      Kembali
-                    </button>
-                    <button
-                      disabled={!selectedBallot}
-                      onClick={() => setSimulasiStep(3)}
-                      className={`inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-cream transition ${
-                        selectedBallot
-                          ? "bg-brand-800 hover:bg-brand-700 cursor-pointer"
-                          : "bg-gray-300 cursor-not-allowed opacity-60"
-                      }`}
-                    >
-                      <span>Lanjut Celup Tinta</span>
-                      <IconArrowRight className="h-4 w-4" />
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* SIMULASI STEP 3: CELUP TINTA */}
-              {simulasiStep === 3 && (
-                <div className="py-8 space-y-6">
-                  <div className="max-w-2xl space-y-4">
-                    <span className="inline-block rounded-md bg-sage/20 px-3 py-1 text-xs font-bold text-brand-800">
-                      Langkah 3 dari 3: Celup Tinta
-                    </span>
-                    <h3 className="font-display text-xl font-bold text-brand-800 sm:text-2xl">
-                      Celupkan Jari Tangan ke Tinta KPU
-                    </h3>
-                    <p className="text-sm text-ink-soft leading-relaxed">
-                      Masukkan surat suara yang telah dilipat ke dalam kotak suara sesuai jenis warna, lalu celupkan salah satu jarimu ke botol tinta khusus sebagai tanda telah menggunakan hak pilih.
-                    </p>
-                  </div>
-
-                  <div className="flex flex-col items-center justify-center p-8 rounded-2xl border border-line bg-brand-50/50 text-center space-y-4">
-                    <div className="text-4xl">☝️🟣</div>
-                    <h4 className="font-display text-lg font-bold text-brand-800">
-                      {hasInkedFinger ? "Jari Kamu Sudah Ditingtai!" : "Klik untuk latihan celup tinta:"}
-                    </h4>
-                    <button
-                      onClick={() => setHasInkedFinger(true)}
-                      className={`inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold transition ${
-                        hasInkedFinger
-                          ? "bg-sage text-brand-900 border border-sage-600"
-                          : "bg-brand-800 text-cream hover:bg-brand-700"
-                      }`}
-                    >
-                      {hasInkedFinger ? "✅ Jari Berwarna Ungu (Selesai)" : "Celup Jari Ke Tinta 🖌️"}
-                    </button>
-                  </div>
-
-                  {/* Image Slot for Step 3 TPS */}
-                  <ImagePlaceholder
-                    src=""
-                    alt="Simulasi Celup Tinta"
-                    label="Gambar Simulasi: Celup Tinta TPS"
-                    aspectRatio="aspect-[21/9]"
-                    className="w-full"
-                  />
-
-                  <div className="flex items-center justify-between pt-4">
-                    <button
-                      onClick={() => setSimulasiStep(2)}
-                      className="inline-flex items-center gap-2 rounded-full border border-line bg-white px-5 py-2.5 text-xs font-bold text-ink-soft hover:bg-brand-50"
-                    >
-                      Kembali
-                    </button>
-                    <button
-                      onClick={() => {
-                        setSimulasiStep(1);
-                        setSelectedBallot(null);
-                        setHasInkedFinger(false);
-                      }}
-                      className="inline-flex items-center gap-2 rounded-full bg-brand-800 px-6 py-3 text-sm font-bold text-cream transition hover:bg-brand-700"
-                    >
-                      Ulang Simulasi
-                    </button>
-                  </div>
-                </div>
-              )}
-            </BijakCard>
+          <FadeContent duration={400}>
+            <SimulasiTPS />
           </FadeContent>
         )}
 
