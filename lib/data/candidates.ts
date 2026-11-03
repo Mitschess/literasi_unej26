@@ -1,9 +1,11 @@
 import { Candidate } from "@/lib/types";
 import { mockSources } from "./sources";
+import { withOfficials } from "./officials";
 
 const s = mockSources;
 
-export const mockCandidates: Candidate[] = [
+// Profil lengkap (rekam jejak, janji, kinerja) yang dikurasi manual.
+export const profiledCandidates: Candidate[] = [
   {
     id: "c-001",
     name: "Anies Rasyid Baswedan",
@@ -1600,6 +1602,9 @@ export const mockCandidates: Candidate[] = [
     updatedAt: "2026-08-08",
   },
 ];
+
+// Profil lengkap + direktori gubernur, bupati, wali kota, dan anggota DPR RI.
+export const mockCandidates: Candidate[] = withOfficials(profiledCandidates);
 
 export function getCandidateBySlug(slug: string): Candidate | undefined {
   return mockCandidates.find((c) => c.slug === slug);

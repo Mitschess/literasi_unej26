@@ -154,6 +154,22 @@ export interface IssueStance {
   verifiedNews: VerifiedNews[];
 }
 
+export type OfficeKind = "gubernur" | "bupati" | "wali_kota" | "anggota_dpr";
+
+export interface CurrentOffice {
+  kind: OfficeKind;
+  title: string; // e.g. "Bupati Bangkalan", "Plt. Gubernur Riau", "Anggota DPR RI"
+  region: string; // e.g. "Kabupaten Bangkalan", "Dapil Aceh I"
+  province: string;
+  startDate?: string;
+  endDate?: string;
+  acting?: boolean;
+  deputy?: string;
+  commission?: string;
+  votes?: number;
+  replacing?: string[]; // anggota yang digantikan lewat PAW
+}
+
 export interface Candidate {
   id: string;
   name: string;
@@ -174,6 +190,9 @@ export interface Candidate {
   timeline: TimelineEvent[];
   performanceMetrics: PerformanceMetric[];
   issueStances?: IssueStance[];
+  currentOffice?: CurrentOffice;
+  // "directory" = profil ringkas dari direktori pejabat (belum ada rekam jejak rinci)
+  profileDepth?: "full" | "directory";
   updatedAt: string;
 }
 

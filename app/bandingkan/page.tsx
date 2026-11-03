@@ -7,6 +7,9 @@ import { mockCandidates } from "@/lib/data/candidates";
 import { Candidate } from "@/lib/types";
 import { VerificationBadge } from "@/components/ui/VerificationBadge";
 import { StatusPill } from "@/components/ui/StatusPill";
+import { avatarFallback, createInitialAvatar } from "@/lib/avatar";
+
+const SELECTION_LIMIT = 24;
 
 function CandidateComparisonContent() {
   const searchParams = useSearchParams();
@@ -36,9 +39,16 @@ function CandidateComparisonContent() {
       c.name.toLowerCase().includes(q) ||
       c.party.name.toLowerCase().includes(q) ||
       c.party.shortName.toLowerCase().includes(q) ||
-      c.constituency.name.toLowerCase().includes(q)
+      c.constituency.name.toLowerCase().includes(q) ||
+      (c.currentOffice?.title.toLowerCase().includes(q) ?? false)
     );
   });
+
+  // Data direktori berisi >1.000 pejabat: tampilkan yang dipilih + sebagian hasil pencarian
+  const visibleCandidates = [
+    ...selectedCandidates.filter((c) => !filteredCandidates.includes(c)),
+    ...filteredCandidates,
+  ].slice(0, Math.max(SELECTION_LIMIT, selectedCandidates.length));
 
   const toggleCandidateSelection = (candidateId: string) => {
     if (selectedIds.includes(candidateId)) {
@@ -148,7 +158,7 @@ function CandidateComparisonContent() {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari nama, partai, atau dapil…"
+                placeholder="Cari nama, partai, jabatan, atau dapil…"
                 className="w-full bg-transparent pl-14 pr-28 py-4 text-sm sm:text-base text-ink placeholder:text-ink-muted/70 border-none outline-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0"
               />
               {searchQuery ? (
@@ -178,7 +188,7 @@ function CandidateComparisonContent() {
 
           {/* CANDIDATES SELECTION GRID */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {filteredCandidates.map((candidate) => {
+            {visibleCandidates.map((candidate) => {
               const isSelected = selectedIds.includes(candidate.id);
               return (
                 <div
@@ -191,7 +201,8 @@ function CandidateComparisonContent() {
                 >
                   <div className="flex items-start gap-3">
                     <img
-                      src={candidate.photoUrl}
+                      src={candidate.photoUrl || createInitialAvatar(candidate.name)}
+                      onError={avatarFallback(candidate.name)}
                       alt={candidate.name}
                       className="w-14 h-14 rounded-xl object-cover border border-line shrink-0 bg-mist/50"
                     />
@@ -206,7 +217,9 @@ function CandidateComparisonContent() {
                         {candidate.party.shortName}
                       </span>
                       <p className="text-[11px] text-ink-muted mt-1 line-clamp-1">
-                        {candidate.constituency.name}
+                        {candidate.currentOffice?.title ?? candidate.constituency.name}
+                        {candidate.currentOffice?.kind === "anggota_dpr" &&
+                          ` · ${candidate.constituency.name}`}
                       </p>
                     </div>
                   </div>
@@ -290,7 +303,8 @@ function CandidateComparisonContent() {
                       {/* Candidate Identity Brief */}
                       <div className="flex items-center gap-3 pt-2">
                         <img
-                          src={candidate.photoUrl}
+                          src={candidate.photoUrl || createInitialAvatar(candidate.name)}
+                          onError={avatarFallback(candidate.name)}
                           alt={candidate.name}
                           className="w-12 h-12 rounded-xl object-cover border border-line shrink-0 bg-mist/50"
                         />

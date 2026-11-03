@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { getCandidateBySlug } from "@/lib/data/candidates";
 import { getPartyById } from "@/lib/data/parties";
+import { OFFICE_KIND_LABELS } from "@/lib/data/officials";
+import { createInitialAvatar } from "@/lib/avatar";
 import { VerificationBadge } from "@/components/ui/VerificationBadge";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { SourceCitation } from "@/components/ui/SourceCitation";
@@ -35,6 +37,16 @@ const PARTY_LOGOS: Record<string, string> = {
   Demokrat: "/images/parpol/demokrat.png",
   PAN: "/images/parpol/PAN.png",
 };
+
+const MONTHS = [
+  "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+  "Juli", "Agustus", "September", "Oktober", "November", "Desember",
+];
+
+function formatDate(iso: string) {
+  const [y, m, d] = iso.split("-").map(Number);
+  return `${d} ${MONTHS[m - 1]} ${y}`;
+}
 
 export default function CandidateDetailPage() {
   const params = useParams();
@@ -117,6 +129,30 @@ export default function CandidateDetailPage() {
     (c) => c.verificationStatus === "verified",
   ).length;
 
+  const partyLogo = candidate.party.logoUrl || PARTY_LOGOS[candidate.party.shortName];
+  const office = candidate.currentOffice;
+  const officeFacts = office
+    ? [
+        { label: "Wilayah", value: office.region },
+        { label: "Provinsi", value: office.province },
+        office.startDate && { label: "Mulai menjabat", value: formatDate(office.startDate) },
+        office.endDate && { label: "Akhir masa jabatan", value: formatDate(office.endDate) },
+        office.deputy && {
+          label: office.kind === "gubernur" ? "Wakil gubernur" : office.kind === "bupati" ? "Wakil bupati" : "Wakil wali kota",
+          value: office.deputy,
+        },
+        office.commission && { label: "Alat kelengkapan", value: office.commission },
+        office.votes && {
+          label: "Perolehan suara Pemilu 2024",
+          value: office.votes.toLocaleString("id-ID"),
+        },
+        office.replacing && {
+          label: "Pergantian antarwaktu (PAW)",
+          value: `Menggantikan ${office.replacing[office.replacing.length - 1]}`,
+        },
+      ].filter((fact): fact is { label: string; value: string } => Boolean(fact))
+    : [];
+
   const partyHref = (() => {
     const party = getPartyById(candidate.party.id);
     return party ? `/partai/${party.slug}` : "/partai";
@@ -138,9 +174,14 @@ export default function CandidateDetailPage() {
           <div className="grid gap-0 lg:grid-cols-[220px_1fr]">
             <div className="relative min-h-[240px] bg-brand-800 lg:min-h-full">
               <img
-                src={candidate.photoUrl}
+                src={candidate.photoUrl || createInitialAvatar(candidate.name)}
                 alt={candidate.name}
                 className="absolute inset-0 h-full w-full object-cover object-top opacity-95"
+                onError={(e) => {
+                  const t = e.target as HTMLImageElement;
+                  t.onerror = null;
+                  t.src = createInitialAvatar(candidate.name);
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-brand-900/70 via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:to-brand-900/20" />
             </div>
@@ -224,19 +265,28 @@ export default function CandidateDetailPage() {
                   className="w-28 h-28 lg:w-36 lg:h-36 flex items-center justify-center transition-transform hover:scale-105 cursor-pointer"
                   title={candidate.party.name}
                 >
-                  <img
-                    src={candidate.party.logoUrl || PARTY_LOGOS[candidate.party.shortName] || "/images/parpol/pdi.png"}
-                    alt={`Logo ${candidate.party.name}`}
-                    className="w-full h-full object-contain border-0 outline-none"
-                    onError={(e) => {
-                      const t = e.target as HTMLImageElement;
-                      t.style.display = "none";
-                      const parent = t.parentElement;
-                      if (parent) {
-                        parent.innerHTML = `<span style="color:${candidate.party.color};font-weight:900;font-size:24px">${candidate.party.shortName}</span>`;
-                      }
-                    }}
-                  />
+                  {partyLogo ? (
+                    <img
+                      src={partyLogo}
+                      alt={`Logo ${candidate.party.name}`}
+                      className="w-full h-full object-contain border-0 outline-none"
+                      onError={(e) => {
+                        const t = e.target as HTMLImageElement;
+                        t.style.display = "none";
+                        const parent = t.parentElement;
+                        if (parent) {
+                          parent.innerHTML = `<span style="color:${candidate.party.color};font-weight:900;font-size:24px">${candidate.party.shortName}</span>`;
+                        }
+                      }}
+                    />
+                  ) : (
+                    <span
+                      className="text-center text-2xl font-black leading-tight"
+                      style={{ color: candidate.party.color }}
+                    >
+                      {candidate.party.shortName}
+                    </span>
+                  )}
                 </Link>
                 <Link
                   href={partyHref}
@@ -302,6 +352,47 @@ export default function CandidateDetailPage() {
           {activeTab === "overview" && (
             <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
               <div className="space-y-5 lg:col-span-8">
+                {office && (
+                  <StudioCard className="p-5 sm:p-6 space-y-4">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <div>
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-sage">
+                          Jabatan saat ini · {OFFICE_KIND_LABELS[office.kind]}
+                        </p>
+                        <h2 className="mt-1 font-display text-lg text-brand-800">
+                          {office.title}
+                        </h2>
+                      </div>
+                      {office.acting && (
+                        <span className="rounded-full bg-amber-50 px-3 py-1 text-[11px] font-semibold text-amber-900">
+                          Pelaksana tugas
+                        </span>
+                      )}
+                    </div>
+                    <dl className="grid grid-cols-1 gap-3 text-xs sm:grid-cols-2">
+                      {officeFacts.map((fact) => (
+                        <div
+                          key={fact.label}
+                          className="rounded-xl border border-line bg-[#F8FAFC] px-3 py-2.5"
+                        >
+                          <dt className="text-[10px] uppercase tracking-wider text-ink-muted">
+                            {fact.label}
+                          </dt>
+                          <dd className="mt-0.5 font-semibold text-ink">{fact.value}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                    {candidate.profileDepth === "directory" && (
+                      <p className="rounded-lg bg-amber-50 px-3 py-2 text-xs leading-relaxed text-amber-900">
+                        <span className="font-semibold">Profil ringkas: </span>
+                        data jabatan dihimpun dari direktori pejabat publik. Rekam jejak
+                        rinci, janji, dan kinerja belum dikurasi untuk profil ini — gunakan
+                        tombol &quot;Laporkan data&quot; bila menemukan perubahan.
+                      </p>
+                    )}
+                  </StudioCard>
+                )}
+
                 <StudioCard className="p-5 sm:p-6 space-y-3">
                   <h2 className="font-display text-lg text-brand-800">
                     Biografi
@@ -311,16 +402,18 @@ export default function CandidateDetailPage() {
                   </p>
                 </StudioCard>
 
-                <StudioCard className="p-5 sm:p-6">
-                  <StudioRail>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-sage">
-                      Visi & misi
-                    </p>
-                    <p className="mt-2 text-sm leading-relaxed text-ink-soft italic">
-                      {candidate.visionMission}
-                    </p>
-                  </StudioRail>
-                </StudioCard>
+                {candidate.visionMission && (
+                  <StudioCard className="p-5 sm:p-6">
+                    <StudioRail>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-sage">
+                        Visi & misi
+                      </p>
+                      <p className="mt-2 text-sm leading-relaxed text-ink-soft italic">
+                        {candidate.visionMission}
+                      </p>
+                    </StudioRail>
+                  </StudioCard>
+                )}
 
                 {candidate.issueStances && candidate.issueStances.length > 0 && (
                   <StudioCard className="p-5 sm:p-6 space-y-4">
@@ -405,6 +498,9 @@ export default function CandidateDetailPage() {
                   <h3 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-muted">
                     Pendidikan
                   </h3>
+                  {candidate.education.length === 0 && (
+                    <p className="text-xs italic text-ink-muted">Belum dihimpun</p>
+                  )}
                   <ul className="space-y-2.5">
                     {candidate.education.map((edu) => (
                       <li
@@ -421,6 +517,9 @@ export default function CandidateDetailPage() {
                   <h3 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-muted">
                     Jabatan & pekerjaan
                   </h3>
+                  {candidate.occupation.length === 0 && (
+                    <p className="text-xs italic text-ink-muted">Belum dihimpun</p>
+                  )}
                   <ul className="space-y-2.5">
                     {candidate.occupation.map((occ) => (
                       <li
@@ -437,6 +536,9 @@ export default function CandidateDetailPage() {
                   <h3 className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-muted">
                     Organisasi
                   </h3>
+                  {candidate.organizations.length === 0 && (
+                    <p className="text-xs italic text-ink-muted">Belum dihimpun</p>
+                  )}
                   <ul className="space-y-2.5">
                     {candidate.organizations.map((org) => (
                       <li

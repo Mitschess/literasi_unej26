@@ -29,3 +29,12 @@ export function createInitialAvatar(
 
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
+
+// Ganti foto yang gagal dimuat (mis. tautan Wikimedia berubah) dengan avatar inisial.
+export function avatarFallback(name: string) {
+  return (e: { currentTarget: HTMLImageElement }) => {
+    const img = e.currentTarget;
+    img.onerror = null;
+    img.src = createInitialAvatar(name);
+  };
+}

@@ -225,7 +225,7 @@ export function PipelineSection() {
 
 export function PrinciplesMarquee() {
   const stats = [
-    { label: "Kandidat Terdata", value: mockCandidates.length, suffix: "+" },
+    { label: "Kandidat & Pejabat Terdata", value: mockCandidates.length, suffix: "+" },
     { label: "Isu Strategis", value: strategicIssues.length, suffix: "" },
     { label: "Tips Anti-Hoax", value: antiHoaxTips.length, suffix: "" },
   ];

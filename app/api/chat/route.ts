@@ -70,7 +70,22 @@ export async function POST(req: Request) {
     }
 
     // Prepare RAG Context from candidate data
-    const candidatesContext = mockCandidates
+    // Profil lengkap selalu masuk konteks; direktori pejabat (>1.000 entri)
+    // hanya disertakan bila nama/wilayahnya disebut dalam pertanyaan.
+    const directoryContext = mockCandidates
+      .filter((c) => c.profileDepth === "directory")
+      .filter((c) => {
+        const region = c.currentOffice?.region
+          .toLowerCase()
+          .replace(/^(kabupaten|kota|dapil) /, "");
+        return lowerQ.includes(c.name.toLowerCase()) || (region ? lowerQ.includes(region) : false);
+      })
+      .slice(0, 15)
+      .map((c) => `Pejabat: ${c.name} — ${c.biography}`)
+      .join("\n");
+
+    const profileContext = mockCandidates
+      .filter((c) => c.profileDepth !== "directory")
       .map((c) => {
         const promisesSummary = c.promises
           .map((p) => `- Janji: ${p.title} (${p.status}) - ${p.description}`)
@@ -85,6 +100,10 @@ ${promisesSummary}
 ${claimsSummary}`;
       })
       .join("\n\n---\n\n");
+
+    const candidatesContext = directoryContext
+      ? `${profileContext}\n\n---\n\n[Direktori Pejabat Aktif]\n${directoryContext}`
+      : profileContext;
 
     // Check if the query is a greeting, simple conversation, gibberish, or irrelevant to political context
     const isGreetingOrConversationOrIrrelevant = (msg: string): boolean => {

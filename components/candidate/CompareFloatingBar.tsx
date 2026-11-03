@@ -3,6 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { useCompare } from "@/lib/context/CompareContext";
+import { avatarFallback, createInitialAvatar } from "@/lib/avatar";
 
 export function CompareFloatingBar() {
   const router = useRouter();
@@ -25,7 +26,8 @@ export function CompareFloatingBar() {
             <div key={c.id} className="relative group">
               <div className="w-10 h-10 rounded-xl overflow-hidden border-2 border-sage shadow-sm">
                 <img
-                  src={c.photoUrl}
+                  src={c.photoUrl || createInitialAvatar(c.name)}
+                  onError={avatarFallback(c.name)}
                   alt={c.name}
                   className="w-full h-full object-cover object-top"
                 />

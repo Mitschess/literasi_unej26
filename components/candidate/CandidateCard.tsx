@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Candidate } from "@/lib/types";
 import ProfileCard from "@/components/ProfileCard";
 import { useCompare } from "@/lib/context/CompareContext";
+import { createInitialAvatar } from "@/lib/avatar";
 
 // Map candidate party shortName to logo paths
 const PARTY_LOGOS: Record<string, string> = {
@@ -28,6 +29,12 @@ export const CandidateCard: React.FC<Props> = ({ candidate }) => {
   const selected = isSelected(candidate.id);
 
   const partyLogoUrl = candidate.party.logoUrl || PARTY_LOGOS[candidate.party.shortName];
+  const office = candidate.currentOffice;
+  const officeLabel = !office
+    ? candidate.constituency.name
+    : office.kind === "anggota_dpr"
+      ? `DPR ${office.region}`
+      : office.title;
 
   return (
     <div className={`w-full max-w-[240px] mx-auto relative ${selected ? "ring-2 ring-sage ring-offset-2 ring-offset-cream rounded-[22px]" : ""}`}>
@@ -57,10 +64,10 @@ export const CandidateCard: React.FC<Props> = ({ candidate }) => {
         compact
         className="w-full"
         name={candidate.name}
-        title={`${candidate.party.shortName} · ${candidate.constituency.name}`}
+        title={`${candidate.party.shortName} · ${officeLabel}`}
         contactText="Rekam Jejak"
         secondaryActionText={selected ? "✓ Terpilih" : "Bandingkan"}
-        avatarUrl={candidate.photoUrl}
+        avatarUrl={candidate.photoUrl || createInitialAvatar(candidate.name)}
         iconUrl=""
         grainUrl=""
         enableTilt

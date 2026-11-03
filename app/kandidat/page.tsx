@@ -8,6 +8,7 @@ import { mockCandidates } from "@/lib/data/candidates";
 import { CandidateCard } from "@/components/candidate/CandidateCard";
 import { SearchableSelect } from "@/components/ui/SearchableSelect";
 import { getCandidateCountsByProvince } from "@/lib/map/province-stats";
+import { OFFICE_KIND_LABELS } from "@/lib/data/officials";
 
 const IndonesiaMap = dynamic(() => import("@/components/map/IndonesiaMap"), {
   ssr: false,
@@ -16,7 +17,7 @@ const IndonesiaMap = dynamic(() => import("@/components/map/IndonesiaMap"), {
   ),
 });
 
-const CARDS_PER_PAGE = 8;
+const CARDS_PER_PAGE = 12;
 
 function CandidateListContent() {
   const searchParams = useSearchParams();
@@ -24,6 +25,7 @@ function CandidateListContent() {
   const initialQuery = searchParams.get("q") || "";
   const initialType = searchParams.get("type") || "";
   const initialProvince = searchParams.get("provinsi") || "all";
+  const initialOffice = searchParams.get("jabatan") || "all";
 
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [selectedParty, setSelectedParty] = useState("all");
@@ -31,6 +33,7 @@ function CandidateListContent() {
   const [selectedElectionType, setSelectedElectionType] = useState(
     initialType || "all",
   );
+  const [selectedOffice, setSelectedOffice] = useState(initialOffice);
   const [currentPage, setCurrentPage] = useState(1);
   const provinceCounts = useMemo(
     () => getCandidateCountsByProvince(mockCandidates),
@@ -64,6 +67,17 @@ function CandidateListContent() {
     [provinces],
   );
 
+  const officeOptions = useMemo(
+    () => [
+      { value: "all", label: "Semua Jabatan" },
+      ...Object.entries(OFFICE_KIND_LABELS).map(([value, label]) => ({
+        value,
+        label,
+      })),
+    ],
+    [],
+  );
+
   const electionOptions = useMemo(
     () => [
       { value: "all", label: "Semua Pemilu" },
@@ -76,6 +90,10 @@ function CandidateListContent() {
     selectedParty !== "all" && { key: "party", label: selectedParty },
     selectedProvince !== "all" && { key: "province", label: selectedProvince },
     selectedElectionType !== "all" && { key: "type", label: selectedElectionType },
+    selectedOffice !== "all" && {
+      key: "office",
+      label: OFFICE_KIND_LABELS[selectedOffice as keyof typeof OFFICE_KIND_LABELS],
+    },
   ].filter(Boolean) as { key: string; label: string }[];
 
   const filteredCandidates = useMemo(() => {
@@ -90,7 +108,10 @@ function CandidateListContent() {
         const matchesConstituency =
           c.constituency.name.toLowerCase().includes(q) ||
           c.constituency.province.toLowerCase().includes(q);
-        if (!matchesName && !matchesParty && !matchesConstituency) return false;
+        const matchesOffice = c.currentOffice?.title.toLowerCase().includes(q) ?? false;
+        if (!matchesName && !matchesParty && !matchesConstituency && !matchesOffice) {
+          return false;
+        }
       }
 
       // Party filter
@@ -114,9 +135,14 @@ function CandidateListContent() {
         return false;
       }
 
+      // Office filter
+      if (selectedOffice !== "all" && c.currentOffice?.kind !== selectedOffice) {
+        return false;
+      }
+
       return true;
     });
-  }, [searchQuery, selectedParty, selectedProvince, selectedElectionType]);
+  }, [searchQuery, selectedParty, selectedProvince, selectedElectionType, selectedOffice]);
 
   const totalPages = Math.max(
     1,
@@ -130,7 +156,7 @@ function CandidateListContent() {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, selectedParty, selectedProvince, selectedElectionType]);
+  }, [searchQuery, selectedParty, selectedProvince, selectedElectionType, selectedOffice]);
 
   useEffect(() => {
     if (currentPage > totalPages) {
@@ -194,8 +220,8 @@ function CandidateListContent() {
               Rekam Jejak Kandidat
             </h1>
             <p className="text-sm text-ink-muted max-w-xl leading-relaxed">
-              Jelajahi kandidat lewat peta, pencarian, atau filter partai dan wilayah
-              untuk memeriksa profil serta rekam jejak secara transparan.
+              Jelajahi kandidat serta pejabat aktif — gubernur, bupati, wali kota, dan
+              anggota DPR RI — lewat peta, pencarian, atau filter partai dan wilayah.
             </p>
           </div>
           <div className="w-24 h-24 sm:w-32 sm:h-32 shrink-0 self-center">
@@ -261,7 +287,7 @@ function CandidateListContent() {
                 Filter & Pencarian
               </p>
               <p className="mt-0.5 text-xs text-ink-muted">
-                Cari nama kandidat atau saring berdasarkan partai, wilayah, dan jenis pemilu
+                Cari nama atau saring berdasarkan partai, wilayah, jabatan, dan jenis pemilu
               </p>
             </div>
             {activeFilters.length > 0 && (
@@ -272,6 +298,7 @@ function CandidateListContent() {
                   setSelectedParty("all");
                   handleProvinceSelect(null);
                   setSelectedElectionType("all");
+                  setSelectedOffice("all");
                 }}
                 className="rounded-full border border-line bg-white px-3 py-1.5 text-[11px] font-bold text-brand-700 transition hover:border-sage hover:text-sage"
               >
@@ -288,7 +315,7 @@ function CandidateListContent() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Cari kandidat berdasarkan nama, partai, atau daerah pemilihan..."
+              placeholder="Cari nama, partai, jabatan, kabupaten/kota, atau dapil..."
               className="w-full rounded-xl border border-line bg-cream py-3 pl-10 pr-4 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-sage"
             />
             <svg
@@ -308,7 +335,7 @@ function CandidateListContent() {
           </div>
 
           {/* Searchable Filters */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <SearchableSelect
               label="Partai Politik"
               value={selectedParty}
@@ -324,6 +351,14 @@ function CandidateListContent() {
               options={provinceOptions}
               placeholder="Semua Wilayah"
               searchPlaceholder="Cari provinsi..."
+            />
+            <SearchableSelect
+              label="Jabatan Saat Ini"
+              value={selectedOffice}
+              onChange={setSelectedOffice}
+              options={officeOptions}
+              placeholder="Semua Jabatan"
+              searchPlaceholder="Cari jabatan..."
             />
             <SearchableSelect
               label="Jenis Pemilu"
@@ -400,6 +435,12 @@ function CandidateListContent() {
                   ← Sebelumnya
                 </button>
 
+                {totalPages > 7 && (
+                  <span className="px-2 text-xs font-semibold text-ink-muted tabular-nums">
+                    Halaman {currentPage} dari {totalPages}
+                  </span>
+                )}
+
                 {totalPages <= 7 &&
                   Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                     <button
@@ -456,6 +497,7 @@ function CandidateListContent() {
               setSelectedParty("all");
               handleProvinceSelect(null);
               setSelectedElectionType("all");
+              setSelectedOffice("all");
             }}
             className="px-4 py-2 rounded-xl bg-brand-800 text-white text-xs font-bold"
           >
